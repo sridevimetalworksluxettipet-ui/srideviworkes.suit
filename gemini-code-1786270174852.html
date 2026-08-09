@@ -1,0 +1,2638 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Sri Devi Metal Works - Worker Wage, KYC, Tools & AI Suite</title>
+
+  <!-- MODERN GOOGLE FONT: PLUS JAKARTA SANS -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- FIREBASE WEB SDK (v8) -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
+  <!-- GOOGLE TRANSLATE SDK -->
+  <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+  <!-- QR CODE GENERATOR LIBRARY -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+  <!-- CHART.JS VISUAL ANALYTICS LIBRARY -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    :root {
+      --bg-primary: #f1f5f9;
+      --bg-surface: #ffffff;
+      --bg-card: #ffffff;
+      --text-primary: #0f172a;
+      --text-secondary: #475569;
+      --text-muted: #94a3b8;
+      --border-color: #e2e8f0;
+      --border-focus: #6366f1;
+      --primary: #4f46e5;
+      --primary-hover: #4338ca;
+      --primary-light: #eef2ff;
+      --success: #10b981;
+      --success-light: #ecfdf5;
+      --warning: #f59e0b;
+      --warning-light: #fffbeb;
+      --danger: #ef4444;
+      --danger-light: #fef2f2;
+      --ai-purple: #8b5cf6;
+      --ai-purple-light: rgba(139, 92, 246, 0.12);
+      --shadow-sm: 0 2px 4px rgba(0,0,0,0.03);
+      --shadow-md: 0 8px 16px -2px rgba(15, 23, 42, 0.06);
+      --shadow-lg: 0 20px 25px -5px rgba(15, 23, 42, 0.1), 0 8px 10px -6px rgba(15, 23, 42, 0.05);
+      --radius-sm: 10px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --radius-full: 9999px;
+    }
+
+    [data-theme="dark"] {
+      --bg-primary: #0f172a;
+      --bg-surface: #1e293b;
+      --bg-card: #1e293b;
+      --text-primary: #f8fafc;
+      --text-secondary: #cbd5e1;
+      --text-muted: #64748b;
+      --border-color: #334155;
+      --primary: #3b82f6;
+      --primary-hover: #60a5fa;
+      --primary-light: rgba(59, 130, 246, 0.15);
+      --secondary: #94a3b8;
+      --success: #10b981;
+      --success-light: rgba(16, 185, 129, 0.15);
+      --warning: #f59e0b;
+      --warning-light: rgba(245, 158, 11, 0.15);
+      --danger: #ef4444;
+      --danger-light: rgba(239, 68, 68, 0.15);
+      --ai-purple: #a78bfa;
+      --ai-purple-light: rgba(167, 139, 250, 0.15);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif; -webkit-tap-highlight-color: transparent; }
+    body { background-color: var(--bg-primary); color: var(--text-primary); min-height: 100vh; padding-bottom: 80px; }
+
+    header {
+      background: rgba(255, 255, 255, 0.95);
+      border-bottom: 1px solid var(--border-color);
+      padding: 0.9rem 1.25rem;
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.85rem;
+      position: sticky; top: 0; z-index: 100; backdrop-filter: blur(16px);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+    }
+    .brand-box { display: flex; align-items: center; gap: 0.8rem; }
+    .brand-logo { width: 42px; height: 44px; min-width: 42px; background: linear-gradient(135deg, #4f46e5 0%, #2563eb 100%); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; color: white; font-weight: 800; font-size: 1.35rem; box-shadow: 0 6px 16px rgba(79, 70, 229, 0.35); }
+    .brand-title { font-size: 1.15rem; font-weight: 800; color: var(--text-primary); letter-spacing: -0.02em; }
+    .brand-sub { font-size: 0.75rem; color: var(--text-secondary); font-weight: 500; }
+
+    .nav-tabs {
+      display: flex; gap: 0.5rem; background: var(--bg-surface);
+      padding: 0.65rem 0.85rem; border-bottom: 1px solid var(--border-color);
+      overflow-x: auto; box-shadow: var(--shadow-sm);
+      -webkit-overflow-scrolling: touch; scrollbar-width: none;
+    }
+    .nav-tabs::-webkit-scrollbar { display: none; }
+    .tab-btn {
+      padding: 0.65rem 1rem; border: 1px solid transparent; background: transparent;
+      color: var(--text-secondary); font-weight: 700; border-radius: var(--radius-md);
+      cursor: pointer; white-space: nowrap; font-size: 0.85rem; text-align: left; transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      min-height: 44px; display: flex; flex-direction: column; justify-content: center;
+    }
+    .tab-btn:hover { background-color: var(--primary-light); color: var(--primary); }
+    .tab-btn span.hi { display: block; font-size: 0.7rem; color: var(--text-muted); font-weight: 500; margin-top: 1px; }
+    .tab-btn.active { background: linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%); color: white; box-shadow: 0 6px 18px rgba(79, 70, 229, 0.3); }
+    .tab-btn.active span.hi { color: rgba(255,255,255,0.85); }
+    .tab-btn.ai-tab { color: var(--ai-purple); font-weight: 800; }
+    .tab-btn.ai-tab.active { background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%); color: white; box-shadow: 0 6px 18px rgba(139, 92, 246, 0.35); }
+
+    .container { max-width: 1350px; margin: 1.25rem auto; padding: 0 0.85rem; }
+
+    .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
+    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 0.85rem; margin-bottom: 1.25rem; }
+    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.15rem; margin-bottom: 1.5rem; }
+    .stat-card {
+      background: var(--bg-card); padding: 1.15rem; border-radius: var(--radius-lg);
+      border: 1px solid var(--border-color); box-shadow: var(--shadow-md);
+      position: relative; overflow: hidden; transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+    .stat-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
+    .stat-card::before { content: ''; position: absolute; top: 0; left: 0; width: 5px; height: 100%; background: var(--primary); }
+    .stat-card h4 { font-size: 0.82rem; color: var(--text-secondary); margin-bottom: 0.15rem; font-weight: 700; }
+    .stat-card .hi-label { font-size: 0.72rem; color: var(--text-muted); margin-bottom: 0.4rem; font-weight: 500; }
+    .stat-card p { font-size: 1.45rem; font-weight: 800; letter-spacing: -0.03em; }
+
+    .card { background: var(--bg-card); padding: 1.35rem; border-radius: var(--radius-lg); border: 1px solid var(--border-color); margin-bottom: 1.5rem; box-shadow: var(--shadow-md); }
+    .card-title { font-size: 1.08rem; font-weight: 800; margin-bottom: 1.15rem; display: flex; justify-content: space-between; align-items: center; letter-spacing: -0.01em; flex-wrap: wrap; gap: 0.5rem; }
+
+    .filter-bar {
+      background: var(--primary-light);
+      border: 1.5px solid rgba(79, 70, 229, 0.2);
+      border-radius: var(--radius-md);
+      padding: 0.85rem 1rem;
+      margin-bottom: 1.15rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.85rem;
+    }
+    .filter-bar-title {
+      font-size: 0.86rem;
+      font-weight: 800;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1rem; }
+    .form-group { display: flex; flex-direction: column; gap: 0.35rem; }
+    .form-group label { font-size: 0.84rem; font-weight: 700; color: var(--text-secondary); }
+    .form-group label span.hi-lbl { font-size: 0.72rem; color: var(--text-muted); font-weight: 500; margin-left: 4px; }
+    .form-control {
+      padding: 0.7rem 0.9rem; border-radius: var(--radius-md); border: 1.5px solid var(--border-color);
+      outline: none; font-size: 0.9rem; transition: all 0.2s ease; background: var(--bg-surface);
+      color: var(--text-primary); font-weight: 500; min-height: 44px;
+    }
+    .form-control:focus { border-color: var(--border-focus); box-shadow: 0 0 0 4px var(--primary-light); }
+
+    .btn { padding: 0.65rem 1.15rem; border-radius: var(--radius-md); border: none; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; font-size: 0.88rem; transition: all 0.25s ease; min-height: 42px; }
+    .btn-primary { background: linear-gradient(135deg, #4f46e5 0%, #2563eb 100%); color: white; box-shadow: 0 6px 16px rgba(79, 70, 229, 0.3); }
+    .btn-primary:hover { opacity: 0.95; transform: translateY(-2px); box-shadow: 0 8px 20px rgba(79, 70, 229, 0.4); }
+    .btn-success { background: var(--success); color: white; box-shadow: 0 6px 16px rgba(16, 185, 129, 0.25); }
+    .btn-warning { background: var(--warning); color: white; }
+    .btn-danger { background: var(--danger); color: white; }
+    .btn-ai { background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%); color: white; box-shadow: 0 6px 16px rgba(139, 92, 246, 0.3); }
+    .btn-ai:hover { opacity: 0.95; transform: translateY(-2px); }
+    .btn-outline { background: transparent; border: 1.5px solid var(--border-color); color: var(--text-primary); }
+    .btn-outline:hover { background-color: var(--bg-primary); border-color: var(--text-secondary); }
+    .btn-sm { padding: 0.4rem 0.8rem; font-size: 0.8rem; border-radius: var(--radius-md); min-height: 36px; }
+
+    .table-container { width: 100%; overflow-x: auto; border-radius: var(--radius-md); border: 1px solid var(--border-color); background: var(--bg-card); -webkit-overflow-scrolling: touch; }
+    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.88rem; }
+    th { background: #f8fafc; padding: 0.8rem 0.85rem; font-weight: 800; color: var(--text-secondary); border-bottom: 1.5px solid var(--border-color); white-space: nowrap; font-size: 0.8rem; letter-spacing: 0.02em; text-transform: uppercase; }
+    th span.hi-th { display: block; font-size: 0.7rem; color: var(--text-muted); font-weight: 500; text-transform: none; }
+    td { padding: 0.8rem 0.85rem; border-bottom: 1px solid var(--border-color); color: var(--text-primary); vertical-align: middle; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background-color: rgba(79, 70, 229, 0.02); }
+
+    .badge { padding: 0.3rem 0.7rem; border-radius: var(--radius-full); font-size: 0.75rem; font-weight: 800; display: inline-block; }
+    .badge-success { background: var(--success-light); color: var(--success); }
+    .badge-warning { background: var(--warning-light); color: var(--warning); }
+    .badge-danger { background: var(--danger-light); color: var(--danger); }
+    .badge-primary { background: var(--primary-light); color: var(--primary); }
+    .badge-ai { background: var(--ai-purple-light); color: var(--ai-purple); }
+
+    .view-section { display: none; }
+    .view-section.active { display: block; }
+
+    .worker-checkbox-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 0.6rem; background: var(--bg-primary); padding: 0.85rem; border-radius: var(--radius-md); border: 1.5px solid var(--border-color);
+    }
+    .checkbox-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; font-weight: 700; cursor: pointer; min-height: 38px; }
+
+    .id-card-wrap {
+      width: 340px; max-width: 100%; margin: 0 auto; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      color: white; border-radius: var(--radius-lg); padding: 1.25rem; box-shadow: var(--shadow-lg); border: 2px solid #38bdf8;
+      position: relative; overflow: hidden;
+    }
+    .id-card-header { text-align: center; border-bottom: 1px dashed rgba(255,255,255,0.25); padding-bottom: 0.75rem; margin-bottom: 0.85rem; }
+    .id-card-title { font-size: 1.08rem; font-weight: 800; color: #38bdf8; letter-spacing: -0.01em; }
+    .id-card-body { display: flex; flex-direction: column; gap: 0.55rem; font-size: 0.82rem; }
+    .id-card-row { display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 0.25rem; }
+
+    .work-thumb { width: 42px; height: 42px; border-radius: 8px; object-fit: cover; border: 1.5px solid var(--border-color); cursor: pointer; transition: transform 0.2s; display: inline-block; margin-right: 4px; }
+    .work-thumb:hover { transform: scale(1.1); border-color: var(--primary); }
+
+    .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.75); display: flex; align-items: center; justify-content: center; z-index: 1000; opacity: 0; pointer-events: none; padding: 0.75rem; backdrop-filter: blur(5px); transition: opacity 0.25s ease; }
+    .modal-overlay.active { opacity: 1; pointer-events: auto; }
+    .modal { background-color: var(--bg-surface); border-radius: var(--radius-lg); max-width: 600px; width: 100%; max-height: 92vh; overflow-y: auto; box-shadow: var(--shadow-lg); display: flex; flex-direction: column; }
+    .modal-header { padding: 1rem 1.25rem; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; }
+    .modal-body { padding: 1.15rem; flex: 1; overflow-y: auto; }
+    .modal-footer { padding: 0.85rem 1.25rem; border-top: 1px solid var(--border-color); display: flex; justify-content: flex-end; gap: 0.65rem; }
+
+    #passbook-print-area, #worklog-print-area, #orderlog-print-area, #daily-production-print-area {
+      background: #ffffff;
+      padding: 1.25rem;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-color);
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .report-header { border-bottom: 2.5px solid #0f172a; padding-bottom: 12px; margin-bottom: 14px; }
+
+    .kyc-box {
+      background: var(--primary-light);
+      border: 1px solid rgba(79, 70, 229, 0.25);
+      padding: 0.8rem 1rem;
+      border-radius: var(--radius-md);
+      margin-bottom: 1.15rem;
+      font-size: 0.84rem;
+      line-height: 1.5;
+    }
+
+    .hi-text { color: var(--primary); font-weight: 700; }
+
+    .toast-container { position: fixed; bottom: 1.5rem; left: 1rem; right: 1rem; display: flex; flex-direction: column; gap: 0.5rem; z-index: 1100; pointer-events: none; }
+    .toast { padding: 0.75rem 1.1rem; border-radius: var(--radius-md); background-color: var(--bg-surface); color: var(--text-primary); box-shadow: var(--shadow-lg); border-left: 4px solid var(--primary); display: flex; align-items: center; gap: 0.65rem; font-size: 0.85rem; pointer-events: auto; }
+    .toast.success { border-left-color: var(--success); }
+    .toast.danger { border-left-color: var(--danger); }
+    .toast.info { border-left-color: var(--primary); }
+
+    @media (max-width: 768px) {
+      header { padding: 0.75rem 0.85rem; }
+      .brand-title { font-size: 1.05rem; }
+      .container { margin: 0.85rem auto; padding: 0 0.5rem; }
+      .card { padding: 1rem 0.85rem; margin-bottom: 1.15rem; }
+      .form-row { grid-template-columns: 1fr; gap: 0.75rem; margin-bottom: 0.75rem; }
+      .grid-4, .grid-3, .grid-2 { grid-template-columns: 1fr; gap: 0.85rem; }
+      .btn { width: 100%; }
+      .btn-sm { width: auto; }
+      th, td { padding: 0.65rem 0.6rem; font-size: 0.82rem; }
+      .worker-checkbox-grid { grid-template-columns: 1fr 1fr; }
+      #passbook-print-area, #worklog-print-area, #orderlog-print-area, #daily-production-print-area { padding: 0.85rem; }
+      .filter-bar { flex-direction: column; align-items: stretch; }
+    }
+
+    @media print {
+      body * { visibility: hidden !important; }
+      #passbook-print-area, #passbook-print-area *, #worklog-print-area, #worklog-print-area *, #orderlog-print-area, #orderlog-print-area *, #daily-production-print-area, #daily-production-print-area *, #id-card-modal, #id-card-modal * { visibility: visible !important; }
+      #passbook-print-area, #worklog-print-area, #orderlog-print-area, #daily-production-print-area { position: absolute; left: 0; top: 0; width: 100%; padding: 10mm; background: white !important; color: black !important; }
+      .hide-pdf { display: none !important; }
+      tr { page-break-inside: avoid !important; break-inside: avoid !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="brand-box">
+      <div class="brand-logo">S</div>
+      <div>
+        <div class="brand-title">Sri Devi Metal Works</div>
+        <div class="brand-sub">Worker Wage, KYC, Tools & AI Intelligence Suite</div>
+      </div>
+    </div>
+    <div style="display:flex; align-items:center; gap:0.75rem;">
+      <div id="google_translate_element"></div>
+      <span id="sync-badge" class="badge badge-success">🌐 Cloud Active</span>
+    </div>
+  </header>
+
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('dashboard', this)">
+      📊 Dashboard
+      <span class="hi">डैशबोर्ड (समरी)</span>
+    </button>
+    <button class="tab-btn ai-tab" onclick="switchTab('ai-hisaab', this)">
+      🤖 AI Worker Hisaab
+      <span class="hi">एआई हिसाब व एडवांस जोखिम</span>
+    </button>
+    <button class="tab-btn" onclick="switchTab('workers', this)">
+      👷 Worker Master & KYC
+      <span class="hi">वर्कर प्रोफाइल व बैंक खाता</span>
+    </button>
+    <button class="tab-btn" onclick="switchTab('work-entry', this)">
+      ⚙️ Regular Work Log
+      <span class="hi">रेगुलर काम (फोटो व बोलकर)</span>
+    </button>
+    <button class="tab-btn" style="color:#b45309; font-weight:800;" onclick="switchTab('order-entry', this)">
+      📦 Order Almari Log
+      <span class="hi">ऑर्डर अलमारी (अलग खाता)</span>
+    </button>
+    <button class="tab-btn" style="color:#059669; font-weight:800;" onclick="switchTab('daily-production', this)">
+      🏭 Daily Total Production
+      <span class="hi">दैनिक कुल उत्पादन (बिना हिसाब)</span>
+    </button>
+    <button class="tab-btn" onclick="switchTab('payments', this)">
+      💵 Payment & Advance Log
+      <span class="hi">भुगतान व ऑनलाइन/कैश खाता</span>
+    </button>
+    <button class="tab-btn" onclick="switchTab('tools', this)">
+      🛠️ Tool Issue Log
+      <span class="hi">औजार व टूल्स इश्यू खाता</span>
+    </button>
+    <button class="tab-btn" onclick="switchTab('ledger', this)">
+      📖 Worker Passbook / Hisaab
+      <span class="hi">कारीगर पासबुक व हिसाब</span>
+    </button>
+  </nav>
+
+  <div class="container">
+
+    <!-- 1. DASHBOARD VIEW -->
+    <section id="view-dashboard" class="view-section active">
+      <div class="grid-4">
+        <div class="stat-card">
+          <h4>Total Workers</h4>
+          <div class="hi-label">कुल कारीगर संख्या</div>
+          <p id="dash-total-workers">0</p>
+        </div>
+        <div class="stat-card" style="border-left-color: var(--primary);">
+          <h4>Total Work Done (कमाई)</h4>
+          <div class="hi-label">कुल बनाया सामान (कमाई)</div>
+          <p id="dash-total-work-val" style="color: var(--primary);">₹0.00</p>
+        </div>
+        <div class="stat-card" style="border-left-color: var(--warning);">
+          <h4>Total Paid / Advance</h4>
+          <div class="hi-label">कुल दिया पैसा (पेमेंट/एडवांस)</div>
+          <p id="dash-total-paid" style="color: var(--warning);">₹0.00</p>
+        </div>
+        <div class="stat-card" style="border-left-color: var(--success);">
+          <h4>Net Balance (बाकी हिसाब)</h4>
+          <div class="hi-label">कंपनी / वर्कर बाकी हिसाब</div>
+          <p id="dash-net-balance" style="color: var(--success);">₹0.00</p>
+        </div>
+      </div>
+
+      <div class="grid-2" style="margin-bottom: 1.85rem;">
+        <div class="card">
+          <h3 style="font-size:1rem; margin-bottom:0.85rem; color:var(--text-secondary);">📊 Worker Earned vs Paid / Advance Comparison</h3>
+          <canvas id="chart-wage-vs-adv" style="max-height:240px;"></canvas>
+        </div>
+        <div class="card">
+          <h3 style="font-size:1rem; margin-bottom:0.85rem; color:var(--text-secondary);">🥧 Trade Wise Wage Cost Distribution</h3>
+          <canvas id="chart-trade-dist" style="max-height:240px;"></canvas>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">
+          <span>Worker Wise Summary / कारीगर वार कुल हिसाब</span>
+        </div>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Worker Name <span class="hi-th">कारीगर का नाम (Eng / हिंदी)</span></th>
+                <th>Role / Trade <span class="hi-th">काम का प्रकार</span></th>
+                <th>Total Earned (₹) <span class="hi-th">कुल कमाई (बनाई)</span></th>
+                <th>Total Paid/Adv (₹) <span class="hi-th">कुल दिया (पेमेंट/एडवांस)</span></th>
+                <th>Net Balance (₹) <span class="hi-th">बाकी हिसाब (नेट)</span></th>
+                <th>Action <span class="hi-th">एक्शन</span></th>
+              </tr>
+            </thead>
+            <tbody id="dash-summary-table"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. AI WORKER HISAAB VIEW -->
+    <section id="view-ai-hisaab" class="view-section">
+      <div class="ai-hero-card">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; margin-bottom:1rem;">
+          <div>
+            <span class="badge badge-ai" style="margin-bottom:0.4rem;">🤖 AI Worker Intelligence Active</span>
+            <h2 style="font-size:1.35rem;">Smart Hisaab, Advance Risk & Productivity Score Engine</h2>
+            <p style="color:var(--text-secondary); font-size:0.85rem;">Real-time advance exposure detection, worker output productivity rating, and voice/text assistant.</p>
+          </div>
+          <button class="btn btn-ai" onclick="generateAIWorkerInsights()">⚡ Refresh AI Analysis</button>
+        </div>
+
+        <div style="margin-top: 1rem;">
+          <label style="display:block; font-size:0.85rem; font-weight:700; margin-bottom:0.4rem; color:var(--text-secondary);">Ask Voice / Text Hisaab Assistant / हिसाब सवाल पूछें</label>
+          <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+            <input type="text" id="ai-worker-query" class="form-control" style="flex:1; min-width:240px;" placeholder="Type or speak e.g. 'Surjit hisaab', 'High advance warning', 'Next week forecast'..." onkeypress="if(event.key==='Enter') runWorkerAIQuery()">
+            <button class="btn btn-outline" type="button" onclick="startVoiceRecognition('ai-worker-query')">🎙️ Speak (बोलें)</button>
+            <button class="btn btn-ai" onclick="runWorkerAIQuery()">Ask AI Assistant</button>
+          </div>
+          <div style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-top:0.65rem;">
+            <span class="ai-chip" onclick="quickWorkerQuery('advance-risk')">⚠️ High Advance Warning</span>
+            <span class="ai-chip" onclick="quickWorkerQuery('payout-forecast')">📈 Wage Payout & Production Forecast</span>
+            <span class="ai-chip" onclick="quickWorkerQuery('surjit')">👤 Surjit Hisaab</span>
+            <span class="ai-chip" onclick="quickWorkerQuery('pannalal')">👤 Pannalal Hisaab</span>
+            <span class="ai-chip" onclick="quickWorkerQuery('summary')">📊 Workshop Wage Overview</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom:1.5rem;">
+        <h3 style="margin-bottom:0.75rem; display:flex; align-items:center; gap:0.5rem;">
+          <span style="color:var(--ai-purple);">💬</span> Assistant Response / एआई का उत्तर
+        </h3>
+        <div id="ai-worker-response" class="ai-response-box">Select a quick chip above or type a worker query to inspect detailed hisaab.</div>
+      </div>
+
+      <div class="card" style="margin-bottom:1.5rem; border-top:4px solid var(--primary);">
+        <h3 style="margin-bottom:1rem; color:var(--primary); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap;">
+          <span>⭐ Worker Productivity Score & Output Leaderboard (Mistri, Painter & Helper)</span>
+          <span class="badge badge-primary">Output Ranked</span>
+        </h3>
+        <div id="productivity-leaderboard-container"></div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card" style="border-top:4px solid var(--danger);">
+          <h3 style="margin-bottom:1rem; color:var(--danger); display:flex; align-items:center; justify-content:space-between;">
+            <span>⚠️ 1. Advance Exposure & Risk Detector</span>
+            <span class="badge badge-danger" id="ai-risk-count-badge">0 Workers at Risk</span>
+          </h3>
+          <div id="ai-risk-list"></div>
+        </div>
+
+        <div class="card" style="border-top:4px solid var(--ai-purple);">
+          <h3 style="margin-bottom:1rem; color:var(--ai-purple); display:flex; align-items:center; justify-content:space-between;">
+            <span>📈 3. Wage Payout & Production Forecaster</span>
+            <span class="badge badge-ai">Weekly Forecast</span>
+          </h3>
+          <div id="ai-forecast-list"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. WORKERS MASTER VIEW -->
+    <section id="view-workers" class="view-section">
+      <div class="card">
+        <div class="card-title">
+          <span id="worker-form-title">Add New Worker & KYC / नया वर्कर व बैंक खाता जोड़ें</span>
+        </div>
+        <form id="worker-form" onsubmit="saveWorker(event)">
+          <input type="hidden" id="w-id">
+          
+          <h4 style="margin-bottom:0.85rem; color:var(--primary); font-size:0.98rem; font-weight:800;">👤 Basic Profile / व्यक्तिगत जानकारी</h4>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Worker Full Name * <span class="hi-lbl">(वर्कर का नाम)</span></label>
+              <input type="text" id="w-name" class="form-control" placeholder="e.g. Ramesh Kumar" required>
+            </div>
+            <div class="form-group">
+              <label>Mobile Number <span class="hi-lbl">(मोबाइल नंबर)</span></label>
+              <input type="text" id="w-phone" class="form-control" placeholder="e.g. 9876543210">
+            </div>
+            <div class="form-group">
+              <label>Trade / Skill <span class="hi-lbl">(काम / हुनर)</span></label>
+              <input type="text" id="w-trade" class="form-control" placeholder="Welder, Fitter, Painter, Helper">
+            </div>
+          </div>
+
+          <h4 style="margin: 1.25rem 0 0.85rem 0; color:var(--primary); font-size:0.98rem; font-weight:800;">🏦 Bank Account Details / बैंक खाता विवरण</h4>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Bank Name <span class="hi-lbl">(बैंक का नाम)</span></label>
+              <input type="text" id="w-bank-name" class="form-control" placeholder="e.g. SBI, HDFC, Union Bank">
+            </div>
+            <div class="form-group">
+              <label>Account Number <span class="hi-lbl">(खाता संख्या)</span></label>
+              <input type="text" id="w-acc-no" class="form-control" placeholder="e.g. 30123456789">
+            </div>
+            <div class="form-group">
+              <label>IFSC Code <span class="hi-lbl">(आईएफएससी कोड)</span></label>
+              <input type="text" id="w-ifsc" class="form-control" placeholder="e.g. SBIN0001234" style="text-transform:uppercase;">
+            </div>
+          </div>
+
+          <h4 style="margin: 1.25rem 0 0.85rem 0; color:var(--primary); font-size:0.98rem; font-weight:800;">🪪 Government ID Details / सरकारी पहचान पत्र</h4>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Aadhaar Number <span class="hi-lbl">(आधार कार्ड नंबर)</span></label>
+              <input type="text" id="w-aadhaar" class="form-control" placeholder="12 Digit Aadhaar Number" maxlength="14">
+            </div>
+            <div class="form-group">
+              <label>PAN Card Number <span class="hi-lbl">(पैन कार्ड नंबर)</span></label>
+              <input type="text" id="w-pan" class="form-control" placeholder="e.g. ABCDE1234F" style="text-transform:uppercase;" maxlength="10">
+            </div>
+          </div>
+
+          <div style="display:flex; gap:0.65rem; margin-top:1.35rem;">
+            <button type="submit" class="btn btn-primary" id="w-submit-btn">+ Auto-Translate & Save / सेव करें</button>
+            <button type="button" class="btn btn-outline" onclick="resetWorkerForm()">Cancel / रीसेट</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Worker Directory & KYC List / पंजीकृत कारीगर व बैंक सूची</div>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Name <span class="hi-th">नाम (Eng / हिंदी)</span></th>
+                <th>Mobile <span class="hi-th">मोबाइल</span></th>
+                <th>Trade <span class="hi-th">काम का प्रकार</span></th>
+                <th>Bank & Account <span class="hi-th">बैंक व खाता नंबर</span></th>
+                <th>Aadhaar / PAN <span class="hi-th">आधार व पैन</span></th>
+                <th>Action <span class="hi-th">एक्शन</span></th>
+              </tr>
+            </thead>
+            <tbody id="worker-table-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. REGULAR WORK LOG -->
+    <section id="view-work-entry" class="view-section">
+      <div class="card">
+        <div class="card-title">
+          <span>Record Regular Work Entry / रेगुलर काम का हिसाब</span>
+          <button type="button" class="btn btn-outline btn-sm" onclick="fetchGPSLocation()">📍 Fetch Current GPS Location</button>
+        </div>
+        <form id="work-log-form" onsubmit="saveWorkLog(event)">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Entry Mode * <span class="hi-lbl">(एंट्री मोड चुनें)</span></label>
+              <select id="wl-mode" class="form-control" onchange="toggleWorkEntryMode()" required>
+                <option value="solo">Solo Worker Entry (सिंगल कारीगर)</option>
+                <option value="group">👥 Group Team Entry (ग्रुप में बराबर बांटें)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Date * <span class="hi-lbl">(तारीख)</span></label>
+              <input type="date" id="wl-date" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label>Task / Item Name * <span class="hi-lbl">(काम / सामान का नाम)</span></label>
+              <div style="display:flex; gap:0.4rem;">
+                <input type="text" id="wl-task" class="form-control" placeholder="e.g. 4 Door Almari, Cooler Frame" required>
+                <button type="button" class="btn btn-outline btn-sm" onclick="startVoiceRecognition('wl-task')">🎙️ Speak</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group" id="solo-worker-box">
+            <label>Select Worker * <span class="hi-lbl">(कारीगर चुनें)</span></label>
+            <select id="wl-worker-select" class="form-control">
+              <option value="">-- Choose Worker / वर्कर चुनें --</option>
+            </select>
+          </div>
+
+          <div class="form-group" id="group-worker-box" style="display: none;">
+            <label>Select Group Team Members * <span class="hi-lbl">(टीम के सदस्यों को टिक करें)</span></label>
+            <div class="worker-checkbox-grid" id="group-checkbox-grid"></div>
+          </div>
+
+          <div class="form-row" style="margin-top:1rem;">
+            <div class="form-group">
+              <label>Total Quantity Completed * <span class="hi-lbl">(बनाया गया कुल पीस)</span></label>
+              <input type="number" id="wl-qty" class="form-control" min="0.1" step="0.01" value="1" required oninput="calcWorkTotal()">
+            </div>
+            <div class="form-group">
+              <label>Rate Per Piece (₹) * <span class="hi-lbl">(पर-पीस रेट)</span></label>
+              <input type="number" step="0.5" id="wl-rate" class="form-control" placeholder="0.00" required oninput="calcWorkTotal()">
+            </div>
+            <div class="form-group">
+              <label>Total Work Value (₹) <span class="hi-lbl">(कुल बनी कुल रकम)</span></label>
+              <input type="text" id="wl-total" class="form-control" readonly style="background: var(--bg-primary); font-weight: bold; color: var(--primary);">
+            </div>
+            <div class="form-group">
+              <label>Work Status * <span class="hi-lbl">(काम की स्थिति)</span></label>
+              <select id="wl-status" class="form-control" required>
+                <option value="Completed">Completed / पूरा हुआ (खाते में जोड़ें)</option>
+                <option value="Pending">Pending / In-Progress (पेन्डिंग - जारी है)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Current / In-Progress Work Photo <span class="hi-lbl">(बंते हुए काम की फोटो)</span></label>
+              <input type="file" id="wl-photo-input" class="form-control" accept="image/*" onchange="previewWorkPhoto(this, 'wl-photo-preview')">
+              <img id="wl-photo-preview" src="" class="img-preview" style="display:none; margin-top:0.5rem; width:70px; height:70px; border-radius:6px;">
+            </div>
+
+            <div class="form-group">
+              <label>Captured Timestamp & GPS Location <span class="hi-lbl">(ऑटो टाइम व लोकेशन)</span></label>
+              <input type="text" id="wl-meta-info" class="form-control" readonly placeholder="Auto-captured on save" style="background:var(--bg-primary); font-size:0.8rem;">
+            </div>
+          </div>
+
+          <div id="group-split-preview" style="display:none; margin-bottom:1rem; font-weight:bold; color:var(--success);"></div>
+
+          <button type="submit" class="btn btn-primary" id="wl-save-btn">📸 Save Regular Work Log</button>
+        </form>
+      </div>
+
+      <div class="card">
+        <div class="card-title">
+          <span>Recent Regular Work Logs / रेगुलर काम का रिकॉर्ड</span>
+          <div style="display:flex; gap:0.5rem; flex-wrap:wrap; align-items:center;">
+            <button type="button" class="btn btn-outline btn-sm" onclick="printWorkLogReport()">🖨️ Print Report</button>
+          </div>
+        </div>
+
+        <!-- DATE RANGE FILTER FOR REGULAR WORK LOG -->
+        <div class="filter-bar">
+          <div class="filter-bar-title">📅 Filter Logs By Date Range / तारीख अनुसार देखें:</div>
+          <div style="display:flex; gap:0.5rem; flex-wrap:wrap; align-items:center; flex:1;">
+            <input type="date" id="wl-from-date" class="form-control" style="min-width:130px;" onchange="renderWorkLogs()">
+            <span style="font-weight:bold; color:var(--text-secondary);">to</span>
+            <input type="date" id="wl-to-date" class="form-control" style="min-width:130px;" onchange="renderWorkLogs()">
+            <button type="button" class="btn btn-outline btn-sm" onclick="resetDateFilter('wl-from-date', 'wl-to-date', renderWorkLogs)">↺ Reset Dates</button>
+          </div>
+        </div>
+
+        <div class="form-row" style="margin-bottom: 1rem; max-width: 420px;">
+          <div class="form-group">
+            <label style="font-size:0.88rem; color:var(--primary); font-weight:800;">🔍 Filter By Worker / कारीगर अनुसार देखें:</label>
+            <select id="wl-filter-worker-select" class="form-control" onchange="renderWorkLogs()">
+              <option value="ALL">-- All Workers / सभी कारीगर --</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="worklog-print-area">
+          <div class="report-header">
+            <h2 style="font-size: 1.3rem; margin-bottom: 2px;">SRI DEVI METAL WORKS</h2>
+            <div style="font-size: 0.85rem; color: var(--text-secondary);">4-142, Utkoor, Luxettipet, Mancherial Dist | Regular Production & Work Log Statement</div>
+            <hr style="margin: 10px 0;">
+            <div style="display:flex; justify-content:space-between; font-weight:600; font-size:0.88rem; flex-wrap:wrap; gap:0.5rem;">
+              <span>Filtered Worker: <b id="wl-report-worker-title" style="color:var(--primary);">All Workers</b></span>
+              <span>Generated On: <span id="wl-report-date">-</span></span>
+            </div>
+          </div>
+
+          <div class="grid-3" style="margin-bottom: 1.25rem;">
+            <div class="stat-card" style="padding:0.85rem; border-left-color: var(--primary);">
+              <h4 style="font-size:0.78rem;">Total Quantity / कुल रेगुलर पीस</h4>
+              <p id="wl-summary-qty" style="font-size:1.2rem; color:var(--primary);">0 Pcs</p>
+            </div>
+            <div class="stat-card" style="padding:0.85rem; border-left-color: var(--success);">
+              <h4 style="font-size:0.78rem;">Completed Earned / बनी मजदूरी</h4>
+              <p id="wl-summary-earned" style="font-size:1.2rem; color:var(--success);">₹0.00</p>
+            </div>
+            <div class="stat-card" style="padding:0.85rem; border-left-color: var(--warning);">
+              <h4 style="font-size:0.78rem;">Pending Work Value / पेन्डिंग काम</h4>
+              <p id="wl-summary-pending" style="font-size:1.2rem; color:var(--warning);">₹0.00</p>
+            </div>
+          </div>
+
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Photos / Proof <span class="hi-th">चालू व फाइनल फोटो</span></th>
+                  <th>Date & Time <span class="hi-th">तारीख व समय</span></th>
+                  <th>Worker <span class="hi-th">कारीगर</span></th>
+                  <th>Task / Item <span class="hi-th">काम (Eng / हिंदी)</span></th>
+                  <th>Location <span class="hi-th">लोकेशन</span></th>
+                  <th>Qty / Rate <span class="hi-th">मात्रा व रेट</span></th>
+                  <th>Earned (₹) <span class="hi-th">कुल रकम</span></th>
+                  <th>Status <span class="hi-th">स्थिति</span></th>
+                  <th class="hide-pdf">Action <span class="hi-th">एक्शन</span></th>
+                </tr>
+              </thead>
+              <tbody id="work-log-table"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4.2 SPECIAL ORDER ALMARI LOG -->
+    <section id="view-order-entry" class="view-section">
+      <div class="card" style="border-top: 4px solid var(--warning);">
+        <div class="card-title">
+          <span style="color:#b45309;">📦 Special Order Almari Entry / कस्टमर ऑर्डर अलमारी का अलग खाता</span>
+        </div>
+        <form id="order-log-form" onsubmit="saveOrderLog(event)">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Entry Mode * <span class="hi-lbl">(सिंगल या ग्रुप चुनें)</span></label>
+              <select id="ol-mode" class="form-control" onchange="toggleOrderEntryMode()" required>
+                <option value="solo">Solo Worker Entry (सिंगल कारीगर)</option>
+                <option value="group">👥 Group Team Entry (ग्रुप में बराबर बांटें)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Date * <span class="hi-lbl">(तारीख)</span></label>
+              <input type="date" id="ol-date" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label>Customer Name / Order Details * <span class="hi-lbl">(ग्राहक का नाम व ऑर्डर)</span></label>
+              <input type="text" id="ol-task" class="form-control" placeholder="e.g. Special Glass Almari for Customer Ramesh" required>
+            </div>
+          </div>
+
+          <div class="form-group" id="ol-solo-box">
+            <label>Select Worker * <span class="hi-lbl">(कारीगर चुनें)</span></label>
+            <select id="ol-worker-select" class="form-control">
+              <option value="">-- Choose Worker / वर्कर चुनें --</option>
+            </select>
+          </div>
+
+          <div class="form-group" id="ol-group-box" style="display: none;">
+            <label>Select Group Team Members * <span class="hi-lbl">(टीम के सदस्यों को टिक करें)</span></label>
+            <div class="worker-checkbox-grid" id="ol-group-checkbox-grid"></div>
+          </div>
+
+          <div class="form-row" style="margin-top:1rem;">
+            <div class="form-group">
+              <label>Order Quantity * <span class="hi-lbl">(अलमारी मात्रा)</span></label>
+              <input type="number" id="ol-qty" class="form-control" min="0.1" step="0.01" value="1" required>
+            </div>
+            <div class="form-group">
+              <label>Order Status <span class="hi-lbl">(ऑर्डर स्थिति)</span></label>
+              <input type="text" class="form-control" value="🟡 Order In-Progress (Rate Set On Completion)" readonly style="background:#fffbeb; color:#b45309; font-weight:bold;">
+            </div>
+            <div class="form-group">
+              <label>Order Slip Photo Proof <span class="hi-lbl">(ऑर्डर पर्ची की फोटो)</span></label>
+              <input type="file" class="form-control" accept="image/*" onchange="previewWorkPhoto(this, 'ol-slip-preview')">
+              <img id="ol-slip-preview" src="" class="img-preview" style="display:none; margin-top:0.5rem; width:70px; height:70px; border-radius:6px; border:2px solid var(--warning);">
+            </div>
+            <div class="form-group">
+              <label>In-Progress Work Photo <span class="hi-lbl">(बंते हुए काम की फोटो)</span></label>
+              <input type="file" class="form-control" accept="image/*" onchange="previewWorkPhoto(this, 'ol-inprog-preview')">
+              <img id="ol-inprog-preview" src="" class="img-preview" style="display:none; margin-top:0.5rem; width:70px; height:70px; border-radius:6px;">
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-warning" style="font-weight:800;">📦 Record Special Order Almari Log</button>
+        </form>
+      </div>
+
+      <div class="card">
+        <div class="card-title">
+          <span>Special Order Almari List / ऑर्डर अलमारी की स्थिति व रिकॉर्ड</span>
+          <div style="display:flex; gap:0.5rem;">
+            <button type="button" class="btn btn-outline btn-sm" onclick="printOrderLogReport()">🖨️ Print Report</button>
+          </div>
+        </div>
+
+        <!-- DATE RANGE FILTER FOR SPECIAL ORDER ALMARI -->
+        <div class="filter-bar">
+          <div class="filter-bar-title">📅 Filter Orders By Date Range / तारीख अनुसार देखें:</div>
+          <div style="display:flex; gap:0.5rem; flex-wrap:wrap; align-items:center; flex:1;">
+            <input type="date" id="ol-from-date" class="form-control" style="min-width:130px;" onchange="renderWorkLogs()">
+            <span style="font-weight:bold; color:var(--text-secondary);">to</span>
+            <input type="date" id="ol-to-date" class="form-control" style="min-width:130px;" onchange="renderWorkLogs()">
+            <button type="button" class="btn btn-outline btn-sm" onclick="resetDateFilter('ol-from-date', 'ol-to-date', renderWorkLogs)">↺ Reset Dates</button>
+          </div>
+        </div>
+
+        <div id="orderlog-print-area">
+          <div class="report-header">
+            <h2 style="font-size: 1.3rem; margin-bottom: 2px;">SRI DEVI METAL WORKS</h2>
+            <div style="font-size: 0.85rem; color: var(--text-secondary);">4-142, Utkoor, Luxettipet, Mancherial Dist | Special Customer Order Almari Statement</div>
+          </div>
+
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Photos / Proof <span class="hi-th">पर्ची, चालू व फाइनल फोटो</span></th>
+                  <th>Date & Time <span class="hi-th">तारीख व समय</span></th>
+                  <th>Worker <span class="hi-th">कारीगर</span></th>
+                  <th>Order Details <span class="hi-th">ऑर्डर विवरण</span></th>
+                  <th>Location <span class="hi-th">लोकेशन</span></th>
+                  <th>Qty / Rate <span class="hi-th">मात्रा व रेट</span></th>
+                  <th>Total Earned (₹) <span class="hi-th">कुल बनी रकम</span></th>
+                  <th>Status <span class="hi-th">स्थिति</span></th>
+                  <th class="hide-pdf">Action <span class="hi-th">एक्शन</span></th>
+                </tr>
+              </thead>
+              <tbody id="order-log-table"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4.3 DAILY TOTAL PRODUCTION LOG (No Worker Hisaab Link) -->
+    <section id="view-daily-production" class="view-section">
+      <div class="card" style="border-top: 4px solid var(--success);">
+        <div class="card-title">
+          <span style="color:#059669;">🏭 Daily Total Production Statement / दैनिक कुल उत्पादन रिपोर्ट</span>
+          <button type="button" class="btn btn-outline btn-sm" onclick="printDailyProductionReport()">🖨️ Print Production Report</button>
+        </div>
+        <p style="color:var(--text-secondary); font-size:0.85rem; margin-bottom:1rem;">
+          Note: This statement shows total daily item production aggregated strictly by date from Regular Work & Special Order entries without linking to individual worker earnings or payments.
+        </p>
+
+        <!-- DATE RANGE FILTER FOR DAILY PRODUCTION -->
+        <div class="filter-bar">
+          <div class="filter-bar-title">📅 Filter Production By Date Range:</div>
+          <div style="display:flex; gap:0.5rem; flex-wrap:wrap; align-items:center; flex:1;">
+            <input type="date" id="dp-from-date" class="form-control" style="min-width:130px;" onchange="renderDailyProductionLogs()">
+            <span style="font-weight:bold; color:var(--text-secondary);">to</span>
+            <input type="date" id="dp-to-date" class="form-control" style="min-width:130px;" onchange="renderDailyProductionLogs()">
+            <button type="button" class="btn btn-outline btn-sm" onclick="resetDateFilter('dp-from-date', 'dp-to-date', renderDailyProductionLogs)">↺ Reset Dates</button>
+          </div>
+        </div>
+
+        <div id="daily-production-print-area">
+          <div class="report-header">
+            <h2 style="font-size: 1.3rem; margin-bottom: 2px;">SRI DEVI METAL WORKS</h2>
+            <div style="font-size: 0.85rem; color: var(--text-secondary);">4-142, Utkoor, Luxettipet, Mancherial Dist | Daily Total Workshop Production Log</div>
+            <hr style="margin: 10px 0;">
+            <div style="display:flex; justify-content:space-between; font-weight:600; font-size:0.88rem; flex-wrap:wrap; gap:0.5rem;">
+              <span>Scope: <b>All Workshop Production Entries</b></span>
+              <span>Generated On: <span id="dp-report-date">-</span></span>
+            </div>
+          </div>
+
+          <div class="grid-3" style="margin-bottom: 1.25rem;">
+            <div class="stat-card" style="padding:0.85rem; border-left-color: var(--primary);">
+              <h4 style="font-size:0.78rem;">Total Production Days</h4>
+              <p id="dp-total-days" style="font-size:1.2rem; color:var(--primary);">0 Days</p>
+            </div>
+            <div class="stat-card" style="padding:0.85rem; border-left-color: var(--success);">
+              <h4 style="font-size:0.78rem;">Total Finished Items / कुल पीस</h4>
+              <p id="dp-total-qty" style="font-size:1.2rem; color:var(--success);">0 Pcs</p>
+            </div>
+          </div>
+
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Production Date <span class="hi-th">उत्पादन तारीख</span></th>
+                  <th>Item / Order Task Name <span class="hi-th">सामान व विवरण</span></th>
+                  <th>Entry Category <span class="hi-th">एंट्री प्रकार</span></th>
+                  <th>Total Daily Qty <span class="hi-th">कुल निर्मित पीस</span></th>
+                </tr>
+              </thead>
+              <tbody id="daily-production-table"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. PAYMENTS & ADVANCES -->
+    <section id="view-payments" class="view-section">
+      <div class="card">
+        <div class="card-title">Record Payment, Advance or Return / भुगतान, एडवांस या पैसा वापसी दर्ज करें</div>
+        <form id="payment-form" onsubmit="savePaymentLog(event)">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Date * <span class="hi-lbl">(तारीख)</span></label>
+              <input type="date" id="pay-date" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label>Select Worker * <span class="hi-lbl">(कारीगर चुनें)</span></label>
+              <select id="pay-worker-select" class="form-control" required>
+                <option value="">-- Choose Worker / वर्कर चुनें --</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Entry Type * <span class="hi-lbl">(प्रकार)</span></label>
+              <select id="pay-type" class="form-control" required>
+                <option value="Advance">Advance / खर्चा (उधार)</option>
+                <option value="Regular Wage">Regular Wage / मजदूरी (हफ़्ता)</option>
+                <option value="Advance Return">Advance Return / पैसा वापसी (जमा)</option>
+                <option value="Credit / Extra Income">Credit / Extra Income (अतिरिक्त जमा राशि)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Payment Mode * <span class="hi-lbl">(भुगतान का तरीका)</span></label>
+              <select id="pay-mode" class="form-control" onchange="toggleTxIdField()" required>
+                <option value="Cash">Cash / नकद</option>
+                <option value="Online">Online / ऑनलाइन (UPI/NEFT/Bank)</option>
+              </select>
+            </div>
+
+            <div class="form-group" id="pay-tx-box" style="display: none;">
+              <label>Transaction ID / UTR * <span class="hi-lbl">(ट्रांजेक्शन आईडी / यूटीआर)</span></label>
+              <input type="text" id="pay-tx-id" class="form-control" placeholder="e.g. UPI Ref / 423156789012">
+            </div>
+
+            <div class="form-group">
+              <label>Amount (₹) * <span class="hi-lbl">(राशि)</span></label>
+              <input type="number" step="1" id="pay-amount" class="form-control" placeholder="0.00" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Remarks / Note <span class="hi-lbl">(रिमार्क / नोट)</span></label>
+            <div style="display:flex; gap:0.4rem;">
+              <input type="text" id="pay-note" class="form-control" placeholder="e.g. Festival advance, Cash return, GPay">
+              <button type="button" class="btn btn-outline btn-sm" onclick="startVoiceRecognition('pay-note')">🎙️ Speak</button>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-success">💵 Record Payment / Entry दर्ज करें</button>
+        </form>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Payment & Advance History / दिए गए पैसे व वापसी की हिस्ट्री</div>
+
+        <!-- DATE RANGE FILTER FOR PAYMENTS -->
+        <div class="filter-bar">
+          <div class="filter-bar-title">📅 Filter Payments By Date Range:</div>
+          <div style="display:flex; gap:0.5rem; flex-wrap:wrap; align-items:center; flex:1;">
+            <input type="date" id="pay-from-date" class="form-control" style="min-width:130px;" onchange="renderPaymentLogs()">
+            <span style="font-weight:bold; color:var(--text-secondary);">to</span>
+            <input type="date" id="pay-to-date" class="form-control" style="min-width:130px;" onchange="renderPaymentLogs()">
+            <button type="button" class="btn btn-outline btn-sm" onclick="resetDateFilter('pay-from-date', 'pay-to-date', renderPaymentLogs)">↺ Reset Dates</button>
+          </div>
+        </div>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Date <span class="hi-th">तारीख</span></th>
+                <th>Worker <span class="hi-th">कारीगर</span></th>
+                <th>Type <span class="hi-th">प्रकार</span></th>
+                <th>Mode & Txn ID <span class="hi-th">मोड व ट्रांजेक्शन आईडी</span></th>
+                <th>Amount (₹) <span class="hi-th">राशि</span></th>
+                <th>Remarks <span class="hi-th">नोट (Eng / हिंदी)</span></th>
+                <th>Action <span class="hi-th">एक्शन</span></th>
+              </tr>
+            </thead>
+            <tbody id="payment-table-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. TOOL ISSUE LOG VIEW -->
+    <section id="view-tools" class="view-section">
+      <div class="card">
+        <div class="card-title">🛠️ Tool & Equipment Issue Log / औजार व टूल्स इश्यू खाता</div>
+        <form id="tool-issue-form" onsubmit="saveToolIssue(event)">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Issue Date * <span class="hi-lbl">(इश्यू तारीख)</span></label>
+              <input type="date" id="tool-date" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label>Select Worker * <span class="hi-lbl">(कारीगर चुनें)</span></label>
+              <select id="tool-worker-select" class="form-control" required></select>
+            </div>
+            <div class="form-group">
+              <label>Tool / Equipment Name * <span class="hi-lbl">(औजार का नाम)</span></label>
+              <input type="text" id="tool-name" class="form-control" placeholder="e.g. Spray Gun, Welding Helmet, Grinder Machine, Scraper" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Quantity * <span class="hi-lbl">(संख्या)</span></label>
+              <input type="number" id="tool-qty" class="form-control" value="1" min="1" required>
+            </div>
+            <div class="form-group">
+              <label>Status <span class="hi-lbl">(स्थिति)</span></label>
+              <select id="tool-status" class="form-control">
+                <option value="Issued">Issued / जारी किया</option>
+                <option value="Returned">Returned / वापस आ गया</option>
+              </select>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary">🛠️ Record Tool Issue / टूल्स दर्ज करें</button>
+        </form>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Issued Tools History / जारी किए गए औजारों की सूची</div>
+
+        <!-- DATE RANGE FILTER FOR TOOLS -->
+        <div class="filter-bar">
+          <div class="filter-bar-title">📅 Filter Tools By Date Range:</div>
+          <div style="display:flex; gap:0.5rem; flex-wrap:wrap; align-items:center; flex:1;">
+            <input type="date" id="tool-from-date" class="form-control" style="min-width:130px;" onchange="renderToolTable()">
+            <span style="font-weight:bold; color:var(--text-secondary);">to</span>
+            <input type="date" id="tool-to-date" class="form-control" style="min-width:130px;" onchange="renderToolTable()">
+            <button type="button" class="btn btn-outline btn-sm" onclick="resetDateFilter('tool-from-date', 'tool-to-date', renderToolTable)">↺ Reset Dates</button>
+          </div>
+        </div>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Date <span class="hi-th">तारीख</span></th>
+                <th>Worker <span class="hi-th">कारीगर</span></th>
+                <th>Tool / Equipment <span class="hi-th">औजार नाम</span></th>
+                <th>Qty <span class="hi-th">मात्रा</span></th>
+                <th>Status <span class="hi-th">स्थिति</span></th>
+                <th>Action <span class="hi-th">एक्शन</span></th>
+              </tr>
+            </thead>
+            <tbody id="tool-table-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. WORKER PASSBOOK VIEW -->
+    <section id="view-ledger" class="view-section">
+      <div class="card">
+        <div class="card-title">
+          <span>Worker Passbook & Statement / वर्कर खाता पासबुक</span>
+          <div style="display:flex; gap:0.6rem; flex-wrap:wrap;">
+            <button class="btn btn-success btn-sm" onclick="sharePassbookWhatsApp()">📲 Smart WhatsApp Passbook</button>
+            <button class="btn btn-outline btn-sm" onclick="printPassbook()">🖨️ Print / प्रिंट</button>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group" style="max-width: 320px;">
+            <label>Select Worker for Passbook <span class="hi-lbl">(वर्कर चुनें)</span></label>
+            <select id="passbook-worker-select" class="form-control" onchange="renderWorkerPassbook()">
+              <option value="">-- Choose Worker / वर्कर चुनें --</option>
+            </select>
+          </div>
+
+          <div class="form-group" style="max-width: 320px;">
+            <label style="color:var(--primary); font-weight:800;">Filter Statement Type <span class="hi-lbl">(फिल्टर चुनें)</span></label>
+            <select id="passbook-filter-type" class="form-control" onchange="renderWorkerPassbook()">
+              <option value="ALL">All Transactions / सभी हिसाब (काम व भुगतान)</option>
+              <option value="WORK">Work Earned Only / सिर्फ बनाई मजदूरी (कमाई)</option>
+              <option value="PAYMENT">Payments & Advances Only / सिर्फ दिया पैसा (खर्चा/एडवांस)</option>
+              <option value="RETURN">Advance Return / Credit Only / सिर्फ जमा राशि</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- DATE RANGE FILTER FOR WORKER PASSBOOK -->
+        <div class="filter-bar">
+          <div class="filter-bar-title">📅 Filter Passbook By Date Range:</div>
+          <div style="display:flex; gap:0.5rem; flex-wrap:wrap; align-items:center; flex:1;">
+            <input type="date" id="pb-from-date" class="form-control" style="min-width:130px;" onchange="renderWorkerPassbook()">
+            <span style="font-weight:bold; color:var(--text-secondary);">to</span>
+            <input type="date" id="pb-to-date" class="form-control" style="min-width:130px;" onchange="renderWorkerPassbook()">
+            <button type="button" class="btn btn-outline btn-sm" onclick="resetDateFilter('pb-from-date', 'pb-to-date', renderWorkerPassbook)">↺ Reset Dates</button>
+          </div>
+        </div>
+
+        <div id="passbook-print-area">
+          <div class="report-header">
+            <h2 style="font-size: 1.3rem; margin-bottom: 2px;">SRI DEVI METAL WORKS</h2>
+            <div style="font-size: 0.85rem; color: var(--text-secondary);">4-142, Utkoor, Luxettipet, Mancherial Dist | Worker Wage Passbook Statement</div>
+            <hr style="margin: 10px 0;">
+            <div id="pb-worker-details" style="display:flex; justify-content:space-between; font-weight:600; font-size:0.95rem;">
+              <span>Worker: -</span>
+              <span>Trade: -</span>
+            </div>
+          </div>
+
+          <div id="pb-kyc-box" class="kyc-box" style="display:none;"></div>
+
+          <div class="grid-4" style="margin-bottom: 1.2rem;">
+            <div class="stat-card" style="padding:0.85rem;">
+              <h4 style="font-size:0.78rem;">Days Worked / कुल दिन</h4>
+              <p id="pb-days-count" style="font-size:1.15rem;">0 Days</p>
+            </div>
+            <div class="stat-card" style="padding:0.85rem;">
+              <h4 style="font-size:0.78rem;">Total Work Earned / बनाई मजदूरी</h4>
+              <p id="pb-total-earned" style="font-size:1.15rem; color: var(--primary);">₹0.00</p>
+            </div>
+            <div class="stat-card" style="padding:0.85rem;">
+              <h4 style="font-size:0.78rem;">Total Net Paid / कुल दिया (Net)</h4>
+              <p id="pb-total-paid" style="font-size:1.15rem; color: var(--warning);">₹0.00</p>
+            </div>
+            <div class="stat-card" style="padding:0.85rem;">
+              <h4 style="font-size:0.78rem;">Net Hisaab Balance / बाकी हिसाब</h4>
+              <p id="pb-net-balance" style="font-size:1.15rem;">₹0.00</p>
+            </div>
+          </div>
+
+          <h4 style="margin-bottom: 0.6rem; font-size:0.95rem;">Statement Ledger / काम, भुगतान व पैसा वापसी का विवरण</h4>
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Date <span class="hi-th">तारीख</span></th>
+                  <th>Description / Task <span class="hi-th">विवरण / काम (Eng / हिंदी)</span></th>
+                  <th>Qty / Mode & UTR <span class="hi-th">मात्रा / पेमेंट मोड व ट्रांजेक्शन आईडी</span></th>
+                  <th>Credit (+ Earned/Return) <span class="hi-th">जमा (+ कमाई / वापसी)</span></th>
+                  <th>Debit (- Paid/Adv) <span class="hi-th">निकासी (- दिया)</span></th>
+                  <th>Balance <span class="hi-th">बाकी बैलेंस</span></th>
+                </tr>
+              </thead>
+              <tbody id="passbook-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <button class="btn btn-success" style="margin-top: 1.25rem;" onclick="sharePassbookWhatsApp()">📲 Send 1-Click WhatsApp Passbook / व्हाट्सएप पर भेजें</button>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- MODALS -->
+  <div class="modal-overlay" id="photo-lightbox-modal">
+    <div class="modal" style="max-width: 600px; text-align: center;">
+      <div class="modal-header">
+        <h3 id="lightbox-title">🖼️ Photo Preview</h3>
+        <button class="icon-btn" onclick="closeModal('photo-lightbox-modal')">✕</button>
+      </div>
+      <div class="modal-body" style="display: flex; justify-content: center; align-items: center; padding: 1rem; background:#0f172a;">
+        <img id="lightbox-img" src="" style="max-width: 100%; max-height: 70vh; border-radius: 8px; border: 2px solid #38bdf8; object-fit: contain;">
+      </div>
+      <div class="modal-footer" style="justify-content: space-between;">
+        <button class="btn btn-outline btn-sm" onclick="closeModal('photo-lightbox-modal')">Close</button>
+        <a id="lightbox-download-link" href="" download="proof_photo.png" class="btn btn-primary btn-sm">📥 Open Full Resolution</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="order-complete-modal">
+    <div class="modal" style="max-width:500px;">
+      <div class="modal-header">
+        <h3>✏️ Complete Work & Set Final Rate</h3>
+        <button class="icon-btn" onclick="closeModal('order-complete-modal')">✕</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="modal-log-id">
+        <div class="form-group" style="margin-bottom: 1rem;">
+          <label>Final Rate Per Piece (₹) * <span class="hi-lbl">(फाइनल रेट तय करें)</span></label>
+          <input type="number" id="modal-final-rate" class="form-control" placeholder="e.g. 1500" required>
+        </div>
+        <div class="form-group">
+          <label>Upload Final Product Photo <span class="hi-lbl">(तैयार अलमारी/सामान की फाइनल फोटो)</span></label>
+          <input type="file" id="modal-final-photo-input" class="form-control" accept="image/*" onchange="previewWorkPhoto(this, 'modal-final-preview')">
+          <img id="modal-final-preview" src="" class="img-preview" style="display:none; margin-top:0.5rem; width:80px; height:80px; border-radius:6px;">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline btn-sm" onclick="closeModal('order-complete-modal')">Cancel</button>
+        <button class="btn btn-success btn-sm" onclick="submitOrderCompletion()">✅ Save Rate & Complete</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="edit-work-log-modal">
+    <div class="modal" style="max-width:500px;">
+      <div class="modal-header">
+        <h3>✏️ Edit Regular Work Log / काम एडिट करें</h3>
+        <button class="icon-btn" onclick="closeModal('edit-work-log-modal')">✕</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="edit-wl-id">
+        <div class="form-group" style="margin-bottom: 1rem;">
+          <label>Date * <span class="hi-lbl">(तारीख)</span></label>
+          <input type="date" id="edit-wl-date" class="form-control" required>
+        </div>
+        <div class="form-group" style="margin-bottom: 1rem;">
+          <label>Select Worker * <span class="hi-lbl">(कारीगर चुनें)</span></label>
+          <select id="edit-wl-worker-select" class="form-control"></select>
+        </div>
+        <div class="form-group" style="margin-bottom: 1rem;">
+          <label>Task / Item Name * <span class="hi-lbl">(काम / सामान का नाम)</span></label>
+          <input type="text" id="edit-wl-task" class="form-control" required>
+        </div>
+        <div class="form-row" style="margin-bottom: 1rem;">
+          <div class="form-group">
+            <label>Quantity * <span class="hi-lbl">(मात्रा)</span></label>
+            <input type="number" id="edit-wl-qty" class="form-control" min="0.1" step="0.01" required oninput="calcEditTotal()">
+          </div>
+          <div class="form-group">
+            <label>Rate Per Piece (₹) * <span class="hi-lbl">(रेट)</span></label>
+            <input type="number" id="edit-wl-rate" class="form-control" step="0.5" required oninput="calcEditTotal()">
+          </div>
+        </div>
+        <div class="form-group" style="margin-bottom: 1rem;">
+          <label>Work Status * <span class="hi-lbl">(काम की स्थिति)</span></label>
+          <select id="edit-wl-status" class="form-control" required>
+            <option value="Completed">Completed / पूरा हुआ (खाते में जोड़ें)</option>
+            <option value="Pending">Pending / In-Progress (पेन्डिंग - जारी है)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Total Earned (₹) <span class="hi-lbl">(कुल रकम)</span></label>
+          <input type="text" id="edit-wl-total" class="form-control" readonly style="background:var(--bg-primary); font-weight:bold; color:var(--primary);">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline btn-sm" onclick="closeModal('edit-work-log-modal')">Cancel</button>
+        <button class="btn btn-primary btn-sm" onclick="updateWorkLog()">💾 Save Changes / अपडेट करें</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="edit-payment-modal">
+    <div class="modal" style="max-width:500px;">
+      <div class="modal-header">
+        <h3>✏️ Edit Payment / Advance Log / पेमेंट एडिट करें</h3>
+        <button class="icon-btn" onclick="closeModal('edit-payment-modal')">✕</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="edit-pay-id">
+        <div class="form-group" style="margin-bottom: 1rem;">
+          <label>Date * <span class="hi-lbl">(तारीख)</span></label>
+          <input type="date" id="edit-pay-date" class="form-control" required>
+        </div>
+        <div class="form-group" style="margin-bottom: 1rem;">
+          <label>Select Worker * <span class="hi-lbl">(कारीगर चुनें)</span></label>
+          <select id="edit-pay-worker-select" class="form-control" required></select>
+        </div>
+        <div class="form-group" style="margin-bottom: 1rem;">
+          <label>Entry Type * <span class="hi-lbl">(प्रकार)</span></label>
+          <select id="edit-pay-type" class="form-control" required>
+            <option value="Advance">Advance / खर्चा (उधार)</option>
+            <option value="Regular Wage">Regular Wage / मजदूरी (हफ़्ता)</option>
+            <option value="Advance Return">Advance Return / पैसा वापसी (जमा)</option>
+            <option value="Credit / Extra Income">Credit / Extra Income (अतिरिक्त जमा राशि)</option>
+          </select>
+        </div>
+        <div class="form-row" style="margin-bottom: 1rem;">
+          <div class="form-group">
+            <label>Payment Mode * <span class="hi-lbl">(तरीका)</span></label>
+            <select id="edit-pay-mode" class="form-control" required>
+              <option value="Cash">Cash / नकद</option>
+              <option value="Online">Online / ऑनलाइन</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Amount (₹) * <span class="hi-lbl">(राशि)</span></label>
+            <input type="number" step="1" id="edit-pay-amount" class="form-control" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Remarks / Note <span class="hi-lbl">(नोट)</span></label>
+          <input type="text" id="edit-pay-note" class="form-control">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline btn-sm" onclick="closeModal('edit-payment-modal')">Cancel</button>
+        <button class="btn btn-success btn-sm" onclick="updatePaymentLog()">💾 Save Changes / अपडेट करें</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="id-card-modal">
+    <div class="modal" style="max-width:440px;">
+      <div class="modal-header">
+        <h3>🪪 Worker Digital ID Card</h3>
+        <button class="icon-btn" onclick="closeModal('id-card-modal')">✕</button>
+      </div>
+      <div class="modal-body" style="background:#f1f5f9; padding:1.25rem;">
+        <div class="id-card-wrap" id="printable-id-card">
+          <div class="id-card-header">
+            <div class="id-card-title">SRI DEVI METAL WORKS</div>
+            <div style="font-size:0.7rem; color:#94a3b8;">Worker Gate Pass & Digital ID</div>
+          </div>
+          <div class="id-card-body">
+            <div class="id-card-row"><span>Worker Name:</span><b id="id-card-name">-</b></div>
+            <div class="id-card-row"><span>Role / Trade:</span><b id="id-card-trade">-</b></div>
+            <div class="id-card-row"><span>Mobile:</span><b id="id-card-mobile">-</b></div>
+            <div class="id-card-row"><span>KYC ID:</span><b id="id-card-kyc">Verified</b></div>
+            <div style="display:flex; justify-content:center; align-items:center; margin-top:0.8rem; background:white; padding:0.6rem; border-radius:8px;" id="id-card-qr-box"></div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer" style="justify-content:space-between;">
+        <button class="btn btn-outline btn-sm" onclick="closeModal('id-card-modal')">Close</button>
+        <button class="btn btn-primary btn-sm" onclick="printIDCard()">🖨️ Print ID Card</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast-container" class="toast-container"></div>
+
+  <script>
+    function normalizeWorkerName(name) {
+      return String(name || '')
+        .trim()
+        .replace(/\s+/g, ' ')
+        .toLowerCase();
+    }
+
+    function isSameWorker(w1, w2) {
+      if (!w1 || !w2) return false;
+      if (w1.id && w2.id && w1.id === w2.id) return true;
+      if (w1.workerId && w2.id && w1.workerId === w2.id) return true;
+      if (w1.id && w2.workerId && w1.id === w2.workerId) return true;
+      if (w1.workerId && w2.workerId && w1.workerId === w2.workerId) return true;
+      
+      const n1 = normalizeWorkerName(w1.name || w1.workerName);
+      const n2 = normalizeWorkerName(w2.name || w2.workerName);
+      return n1 !== '' && n1 === n2;
+    }
+
+    function isDateInRange(recordDateStr, fromElemId, toElemId) {
+      if (!recordDateStr) return true;
+      const fromVal = document.getElementById(fromElemId)?.value;
+      const toVal = document.getElementById(toElemId)?.value;
+
+      if (fromVal && recordDateStr < fromVal) return false;
+      if (toVal && recordDateStr > toVal) return false;
+      return true;
+    }
+
+    function resetDateFilter(fromElemId, toElemId, renderCallback) {
+      const f = document.getElementById(fromElemId);
+      const t = document.getElementById(toElemId);
+      if (f) f.value = '';
+      if (t) t.value = '';
+      if (typeof renderCallback === 'function') renderCallback();
+    }
+
+    function compressImage(file, maxWidth = 800, quality = 0.7) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = (event) => {
+          const img = new Image();
+          img.src = event.target.result;
+          img.onload = () => {
+            const canvas = document.createElement('canvas');
+            let width = img.width;
+            let height = img.height;
+
+            if (width > maxWidth) {
+              height = Math.round((height * maxWidth) / width);
+              width = maxWidth;
+            }
+
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, width, height);
+
+            const compressedBase64 = canvas.toDataURL('image/jpeg', quality);
+            resolve(compressedBase64);
+          };
+          img.onerror = (err) => reject(err);
+        };
+        reader.onerror = (err) => reject(err);
+      });
+    }
+
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement({pageLanguage: 'en', includedLanguages: 'hi,en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
+    }
+
+    async function autoTranslateToHindi(text) {
+      if (!text || !text.trim()) return '';
+      try {
+        const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=hi&dt=t&q=${encodeURIComponent(text)}`;
+        const res = await fetch(url);
+        const data = await res.json();
+        return data[0][0][0] || text;
+      } catch(e) { return text; }
+    }
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDD0LMy1rszqraUADmY9V6M88iQ8pQWxa8",
+      authDomain: "sdmw-inventory-89f46.firebaseapp.com",
+      projectId: "sdmw-inventory-89f46",
+      storageBucket: "sdmw-inventory-89f46.firebasestorage.app",
+      messagingSenderId: "473321078146",
+      appId: "1:473321078146:web:587300aa1b40ed15de639b"
+    };
+
+    let db = null;
+    let workersList = [], workLogsList = [], paymentsList = [], toolIssueList = [];
+
+    let wageVsAdvChartInstance = null;
+    let tradeDistChartInstance = null;
+
+    let currentWorkPhotoBase64 = '';
+    let currentOrderSlipBase64 = '';
+    let currentInProgPhotoBase64 = '';
+    let currentModalFinalPhotoBase64 = '';
+    let currentGPSLocationStr = 'Luxettipet Workshop (Default)';
+
+    function initFirebase() {
+      if (!window.firebase || !window.firebase.firestore) { setTimeout(initFirebase, 300); return; }
+      if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
+      db = firebase.firestore();
+
+      db.collection('wm_workers').onSnapshot(snap => {
+        workersList = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        populateWorkerDropdowns();
+        renderGroupCheckboxGrid();
+        renderOrderGroupCheckboxGrid();
+        refreshActiveView();
+      }, err => console.error(err));
+
+      db.collection('wm_work_logs').onSnapshot(snap => {
+        workLogsList = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        refreshActiveView();
+      }, err => console.error(err));
+
+      db.collection('wm_payments').onSnapshot(snap => {
+        paymentsList = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        refreshActiveView();
+      }, err => console.error(err));
+
+      db.collection('wm_tools').onSnapshot(snap => {
+        toolIssueList = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        refreshActiveView();
+      }, err => console.error(err));
+    }
+
+    function switchTab(tabId, btn) {
+      document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+
+      document.getElementById(`view-${tabId}`).classList.add('active');
+      btn.classList.add('active');
+      refreshActiveView();
+    }
+
+    function openPhotoLightbox(src, title) {
+      if (!src) return;
+      document.getElementById('lightbox-img').src = src;
+      document.getElementById('lightbox-title').textContent = title || 'Photo Preview';
+      document.getElementById('lightbox-download-link').href = src;
+      openModal('photo-lightbox-modal');
+    }
+
+    function populateWorkerDropdowns() {
+      const dropdowns = ['wl-worker-select', 'ol-worker-select', 'pay-worker-select', 'passbook-worker-select', 'tool-worker-select', 'edit-wl-worker-select', 'edit-pay-worker-select'];
+      dropdowns.forEach(id => {
+        const select = document.getElementById(id);
+        if (!select) return;
+        const curVal = select.value;
+        select.innerHTML = `<option value="">-- Choose Worker / वर्कर चुनें --</option>` +
+          workersList.map(w => `<option value="${w.id}">${w.name} ${w.nameHi ? '(' + w.nameHi + ')' : ''}</option>`).join('');
+        select.value = curVal;
+      });
+
+      const filterSelect = document.getElementById('wl-filter-worker-select');
+      if (filterSelect) {
+        const curVal = filterSelect.value || 'ALL';
+        filterSelect.innerHTML = `<option value="ALL">-- All Workers / सभी कारीगर --</option>` +
+          workersList.map(w => `<option value="${w.id}">${w.name} ${w.nameHi ? '(' + w.nameHi + ')' : ''}</option>`).join('');
+        filterSelect.value = curVal;
+      }
+    }
+
+    function renderGroupCheckboxGrid() {
+      const container = document.getElementById('group-checkbox-grid');
+      if (!container) return;
+      container.innerHTML = workersList.map(w => `
+        <label class="checkbox-item">
+          <input type="checkbox" class="grp-worker-chk" value="${w.id}" data-name="${w.name}" data-namehi="${w.nameHi || ''}" onchange="calcWorkTotal()">
+          ${w.name} ${w.nameHi ? '(' + w.nameHi + ')' : ''}
+        </label>
+      `).join('');
+    }
+
+    function renderOrderGroupCheckboxGrid() {
+      const container = document.getElementById('ol-group-checkbox-grid');
+      if (!container) return;
+      container.innerHTML = workersList.map(w => `
+        <label class="checkbox-item">
+          <input type="checkbox" class="ol-grp-worker-chk" value="${w.id}" data-name="${w.name}" data-namehi="${w.nameHi || ''}">
+          ${w.name} ${w.nameHi ? '(' + w.nameHi + ')' : ''}
+        </label>
+      `).join('');
+    }
+
+    function toggleWorkEntryMode() {
+      const mode = document.getElementById('wl-mode').value;
+      if (mode === 'group') {
+        document.getElementById('solo-worker-box').style.display = 'none';
+        document.getElementById('group-worker-box').style.display = 'block';
+        document.getElementById('wl-worker-select').required = false;
+      } else {
+        document.getElementById('solo-worker-box').style.display = 'block';
+        document.getElementById('group-worker-box').style.display = 'none';
+        document.getElementById('wl-worker-select').required = true;
+      }
+      calcWorkTotal();
+    }
+
+    function toggleOrderEntryMode() {
+      const mode = document.getElementById('ol-mode').value;
+      if (mode === 'group') {
+        document.getElementById('ol-solo-box').style.display = 'none';
+        document.getElementById('ol-group-box').style.display = 'block';
+        document.getElementById('ol-worker-select').required = false;
+      } else {
+        document.getElementById('ol-solo-box').style.display = 'block';
+        document.getElementById('ol-group-box').style.display = 'none';
+        document.getElementById('ol-worker-select').required = true;
+      }
+    }
+
+    function toggleTxIdField() {
+      const mode = document.getElementById('pay-mode').value;
+      const box = document.getElementById('pay-tx-box');
+      const txInput = document.getElementById('pay-tx-id');
+
+      if (mode === 'Online') {
+        box.style.display = 'block';
+        txInput.required = true;
+      } else {
+        box.style.display = 'none';
+        txInput.required = false;
+        txInput.value = '';
+      }
+    }
+
+    function startVoiceRecognition(targetInputId) {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRecognition) {
+        showToast('Voice input is not supported in this browser. Use Google Chrome.', 'danger');
+        return;
+      }
+
+      const recognition = new SpeechRecognition();
+      recognition.lang = 'hi-IN';
+      recognition.interimResults = false;
+      recognition.maxAlternatives = 1;
+
+      showToast('🎤 Listening... Kripya boliye (बोलें)', 'info');
+
+      recognition.onresult = (e) => {
+        const text = e.results[0][0].transcript;
+        const input = document.getElementById(targetInputId);
+        if (input) {
+          input.value = (input.value ? input.value + ' ' : '') + text;
+          showToast('✅ Speech recorded!', 'success');
+        }
+      };
+
+      recognition.onerror = (e) => {
+        showToast('Voice Error: ' + e.error, 'danger');
+      };
+
+      try {
+        recognition.start();
+      } catch (err) {
+        showToast('Mic active. Please speak now.', 'info');
+      }
+    }
+
+    function fetchGPSLocation() {
+      if (navigator.geolocation) {
+        showToast('📍 Fetching GPS location...', 'info');
+        navigator.geolocation.getCurrentPosition(
+          (pos) => {
+            currentGPSLocationStr = `Lat: ${pos.coords.latitude.toFixed(4)}, Lng: ${pos.coords.longitude.toFixed(4)}`;
+            showToast('✅ GPS Location captured!', 'success');
+          },
+          (err) => {
+            currentGPSLocationStr = 'Luxettipet Workshop (GPS Offline)';
+            showToast('GPS unavailable. Using default workshop location.', 'info');
+          },
+          { timeout: 8000 }
+        );
+      }
+    }
+
+    async function previewWorkPhoto(input, previewElemId) {
+      if (input.files && input.files[0]) {
+        try {
+          showToast('⏳ Resizing & Optimizing photo...', 'info');
+          const compressedDataUrl = await compressImage(input.files[0], 800, 0.7);
+
+          if (previewElemId === 'wl-photo-preview') currentWorkPhotoBase64 = compressedDataUrl;
+          if (previewElemId === 'ol-slip-preview') currentOrderSlipBase64 = compressedDataUrl;
+          if (previewElemId === 'ol-inprog-preview') currentInProgPhotoBase64 = compressedDataUrl;
+          if (previewElemId === 'modal-final-preview') currentModalFinalPhotoBase64 = compressedDataUrl;
+
+          const preview = document.getElementById(previewElemId);
+          if (preview) {
+            preview.src = compressedDataUrl;
+            preview.style.display = 'block';
+          }
+          showToast('✅ Photo attached & ready!', 'success');
+        } catch (err) {
+          console.error("Photo compress error: ", err);
+          showToast('❌ Image processing failed', 'danger');
+        }
+      }
+    }
+
+    function generateAIWorkerInsights() {
+      const riskContainer = document.getElementById('ai-risk-list');
+      const forecastContainer = document.getElementById('ai-forecast-list');
+      const badge = document.getElementById('ai-risk-count-badge');
+      if(!riskContainer || !forecastContainer) return;
+
+      const advanceRiskWorkers = [];
+
+      workersList.forEach(w => {
+        const earned = workLogsList.filter(l => isSameWorker(l, w) && (l.status || 'Completed') === 'Completed').reduce((a, b) => a + (Number(b.totalEarned) || 0), 0);
+        const paid = paymentsList.filter(p => isSameWorker(p, w)).reduce((a, b) => {
+          const amt = Number(b.amount) || 0;
+          return (b.type === 'Advance Return' || b.type === 'Credit / Extra Income') ? a - amt : a + amt;
+        }, 0);
+        const net = earned - paid;
+
+        if (net < 0) {
+          const advExtra = Math.abs(net);
+          advanceRiskWorkers.push({ ...w, earned, paid, advExtra });
+        }
+      });
+
+      badge.textContent = `${advanceRiskWorkers.length} Workers with Extra Advance`;
+
+      if (advanceRiskWorkers.length === 0) {
+        riskContainer.innerHTML = `<div style="color:var(--success); font-size:0.88rem; padding:0.5rem 0;">✅ <b>All clear!</b> No worker has taken extra advance beyond work done.</div>`;
+      } else {
+        riskContainer.innerHTML = advanceRiskWorkers.map(w => `
+          <div class="ai-insight-item" style="border-left-color: var(--danger); margin-bottom: 0.5rem; padding: 0.75rem; background: var(--bg-surface); border-radius: 8px;">
+            <div style="flex:1;">
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <b style="color:var(--danger); font-size:0.95rem;">⚠️ ${w.name} ${w.nameHi ? '(' + w.nameHi + ')' : ''}</b>
+                <span class="badge badge-danger">Extra Adv: ₹${w.advExtra.toFixed(2)}</span>
+              </div>
+              <div style="font-size:0.82rem; margin-top:0.3rem; color:var(--text-secondary);">
+                Work Done: <b>₹${w.earned.toFixed(2)}</b> | Total Paid: <b>₹${w.paid.toFixed(2)}</b>
+              </div>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      let totalPastWork = 0;
+      workLogsList.filter(l => (l.status || 'Completed') === 'Completed').forEach(w => totalPastWork += (Number(w.totalEarned) || 0));
+
+      const logDates = [...new Set(workLogsList.map(w => w.date))];
+      const activeDays = Math.max(logDates.length, 1);
+      const avgDailyWageCost = totalPastWork / activeDays;
+      const projectedWeeklyWage = avgDailyWageCost * 7;
+      const projectedMonthlyWage = avgDailyWageCost * 26;
+
+      forecastContainer.innerHTML = `
+        <div class="ai-insight-item" style="border-left-color: var(--ai-purple); margin-bottom: 0.5rem; padding: 0.75rem; background: var(--bg-surface); border-radius: 8px;">
+          <div style="flex:1;">
+            <b>🗓️ 7-Day Wage Payout Projection</b>
+            <div style="font-size:1.1rem; font-weight:800; color:var(--primary); margin:0.25rem 0;">₹${projectedWeeklyWage.toLocaleString('en-IN', {minimumFractionDigits:2})}</div>
+          </div>
+        </div>
+        <div class="ai-insight-item" style="border-left-color: var(--success); padding: 0.75rem; background: var(--bg-surface); border-radius: 8px;">
+          <div style="flex:1;">
+            <b>📊 Monthly Production Wage Demand (26 Days)</b>
+            <div style="font-size:1.1rem; font-weight:800; color:var(--success); margin:0.25rem 0;">₹${projectedMonthlyWage.toLocaleString('en-IN', {minimumFractionDigits:2})}</div>
+          </div>
+        </div>
+      `;
+
+      renderProductivityScoreLeaderboard();
+    }
+
+    function renderProductivityScoreLeaderboard() {
+      const container = document.getElementById('productivity-leaderboard-container');
+      if (!container) return;
+
+      const workerStats = workersList.map(w => {
+        const logs = workLogsList.filter(l => isSameWorker(l, w) && (l.status || 'Completed') === 'Completed');
+        const totalQty = logs.reduce((a, b) => a + (Number(b.qty) || 0), 0);
+        const totalEarned = logs.reduce((a, b) => a + (Number(b.totalEarned) || 0), 0);
+        const score = Math.min(100, Math.round((totalEarned / 400) + (totalQty * 1.5)));
+        return { ...w, totalQty, totalEarned, score };
+      });
+
+      workerStats.sort((a, b) => b.score - a.score);
+
+      let html = '';
+      workerStats.forEach((w, idx) => {
+        let rankBadge = `<span class="badge badge-secondary">Rank #${idx + 1}</span>`;
+        if (idx === 0) rankBadge = `<span class="badge badge-warning" style="background:#fef3c7; color:#b45309;">🥇 Top Performer</span>`;
+
+        html += `
+          <div class="ai-insight-item" style="border-left-color: var(--primary); background: var(--bg-surface); margin-bottom: 0.5rem; padding: 0.75rem; border-radius: 8px;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <b>${rankBadge} ${w.name} ${w.nameHi ? '(' + w.nameHi + ')' : ''}</b>
+              <span style="font-weight:800; color:var(--ai-purple);">Score: ${w.score}/100</span>
+            </div>
+            <div style="font-size:0.8rem; color:var(--text-secondary); margin-top:0.2rem;">
+              Trade: ${w.trade || 'General'} | Completed: ${w.totalQty} Pcs | Earned: ₹${w.totalEarned.toFixed(2)}
+            </div>
+          </div>
+        `;
+      });
+      container.innerHTML = html || '<div style="color:var(--text-muted); font-size:0.85rem;">No productivity logs available.</div>';
+    }
+
+    function quickWorkerQuery(type) {
+      if (type === 'advance-risk') runWorkerAIQuery('show advance risk workers');
+      if (type === 'payout-forecast') runWorkerAIQuery('show wage payout forecast');
+      if (type === 'surjit') runWorkerAIQuery('surjit hisaab');
+      if (type === 'pannalal') runWorkerAIQuery('pannalal hisaab');
+      if (type === 'summary') runWorkerAIQuery('overall workshop wage summary');
+    }
+
+    function runWorkerAIQuery(customQuery = null) {
+      const q = (customQuery || document.getElementById('ai-worker-query').value).toLowerCase().trim();
+      const respBox = document.getElementById('ai-worker-response');
+      if(!respBox) return;
+      respBox.innerHTML = `<span style="color:var(--ai-purple); font-weight:700;">🤖 AI Hisaab Engine Analyzing Ledger...</span>`;
+
+      setTimeout(() => {
+        let resp = "";
+        const matchedWorker = workersList.find(w => q.includes(normalizeWorkerName(w.name)) || (w.nameHi && q.includes(w.nameHi.toLowerCase())));
+
+        if (matchedWorker) {
+          const wEarned = workLogsList.filter(l => isSameWorker(l, matchedWorker) && (l.status || 'Completed') === 'Completed').reduce((sum, item) => sum + (Number(item.totalEarned) || 0), 0);
+          const wPaid = paymentsList.filter(p => isSameWorker(p, matchedWorker)).reduce((sum, item) => {
+            return (item.type === 'Advance Return' || item.type === 'Credit / Extra Income') ? sum - (Number(item.amount) || 0) : sum + (Number(item.amount) || 0);
+          }, 0);
+          const net = wEarned - wPaid;
+
+          resp = `<b>${matchedWorker.name} (${matchedWorker.nameHi || matchedWorker.trade}) Hisaab:</b><br>` +
+                 `• Total Work Done (कमाई): <b>₹${wEarned.toFixed(2)}</b><br>` +
+                 `• Total Net Paid (दिया): <b>₹${wPaid.toFixed(2)}</b><br>` +
+                 `• Net Balance: <span style="color:${net >= 0 ? 'var(--success)' : 'var(--danger)'}; font-weight:800;">₹${Math.abs(net).toFixed(2)} ${net >= 0 ? '(Payable Due)' : '(Advance Extra)'}</span>`;
+        } else {
+          let totalWork = 0, totalPaid = 0;
+          workLogsList.filter(l => (l.status || 'Completed') === 'Completed').forEach(w => totalWork += (Number(w.totalEarned) || 0));
+          paymentsList.forEach(p => {
+            const amt = Number(p.amount) || 0;
+            if (p.type === 'Advance Return' || p.type === 'Credit / Extra Income') totalPaid -= amt;
+            else totalPaid += amt;
+          });
+          const netTotal = totalWork - totalPaid;
+
+          resp = `<b>Workshop Hisaab Summary:</b><br>` +
+                 `• Total Active Workers: <b>${workersList.length}</b><br>` +
+                 `• Total Work Created (कमाई): <b>₹${totalWork.toLocaleString('en-IN', {minimumFractionDigits:2})}</b><br>` +
+                 `• Total Net Paid (दिया): <b>₹${totalPaid.toLocaleString('en-IN', {minimumFractionDigits:2})}</b><br>` +
+                 `• Overall Balance: <b>₹${Math.abs(netTotal).toLocaleString('en-IN', {minimumFractionDigits:2})} ${netTotal < 0 ? '(Adv Extra)' : '(Payable Extra)'}</b>`;
+        }
+        respBox.innerHTML = resp;
+      }, 200);
+    }
+
+    function openWorkerIDCard(workerId) {
+      const worker = workersList.find(w => w.id === workerId);
+      if (!worker) return;
+
+      document.getElementById('id-card-name').textContent = `${worker.name} ${worker.nameHi ? '(' + worker.nameHi + ')' : ''}`;
+      document.getElementById('id-card-trade').textContent = worker.trade || 'General Worker';
+      document.getElementById('id-card-mobile').textContent = worker.phone || 'N/A';
+      document.getElementById('id-card-kyc').textContent = worker.accountNo ? 'Verified (Bank & KYC Added)' : 'Registered';
+
+      const qrBox = document.getElementById('id-card-qr-box');
+      qrBox.innerHTML = '';
+
+      if (window.QRCode) {
+        new QRCode(qrBox, {
+          text: `SRIDEVI-WORKER:${worker.id}|${worker.name}|${worker.phone || ''}`,
+          width: 110,
+          height: 110,
+          colorDark: "#0f172a",
+          colorLight: "#ffffff"
+        });
+      }
+      openModal('id-card-modal');
+    }
+
+    function printIDCard() { window.print(); }
+
+    async function saveToolIssue(e) {
+      e.preventDefault();
+      const toolData = {
+        date: document.getElementById('tool-date').value,
+        workerId: document.getElementById('tool-worker-select').value,
+        toolName: document.getElementById('tool-name').value.trim(),
+        qty: Number(document.getElementById('tool-qty').value),
+        status: document.getElementById('tool-status').value
+      };
+
+      await db.collection('wm_tools').add(toolData);
+      document.getElementById('tool-issue-form').reset();
+      document.getElementById('tool-date').value = new Date().toISOString().split('T')[0];
+      showToast('Tool Issue logged successfully!', 'success');
+      refreshActiveView();
+    }
+
+    function renderToolTable() {
+      const tbody = document.getElementById('tool-table-body');
+      if (!tbody) return;
+      tbody.innerHTML = '';
+
+      const filteredTools = toolIssueList.filter(t => isDateInRange(t.date, 'tool-from-date', 'tool-to-date'));
+
+      filteredTools.forEach(t => {
+        const w = workersList.find(item => isSameWorker(item, { id: t.workerId, name: t.workerName }));
+        const isIssued = t.status === 'Issued';
+        tbody.innerHTML += `
+          <tr>
+            <td>${t.date}</td>
+            <td><b>${w ? w.name : (t.workerName || 'Worker')}</b></td>
+            <td><b>${t.toolName}</b></td>
+            <td>${t.qty} Pcs</td>
+            <td><span class="badge ${isIssued ? 'badge-danger' : 'badge-success'}">${t.status}</span></td>
+            <td>${isIssued ? `<button class="btn btn-success btn-sm" onclick="markToolReturned('${t.id}')">Mark Returned</button>` : '✅ Clear'}</td>
+          </tr>
+        `;
+      });
+    }
+
+    async function markToolReturned(id) {
+      await db.collection('wm_tools').doc(id).update({ status: 'Returned' });
+      showToast('Tool marked as returned!', 'success');
+      refreshActiveView();
+    }
+
+    function renderWageCharts() {
+      if (!window.Chart) return;
+
+      const ctx1 = document.getElementById('chart-wage-vs-adv')?.getContext('2d');
+      if (ctx1) {
+        if (wageVsAdvChartInstance) wageVsAdvChartInstance.destroy();
+        const labels = workersList.map(w => w.name);
+        const earnedData = workersList.map(w => workLogsList.filter(l => isSameWorker(l, w) && (l.status || 'Completed') === 'Completed').reduce((a, b) => a + (Number(b.totalEarned) || 0), 0));
+        const paidData = workersList.map(w => paymentsList.filter(p => isSameWorker(p, w)).reduce((a, b) => {
+          const amt = Number(b.amount) || 0;
+          return (b.type === 'Advance Return' || b.type === 'Credit / Extra Income') ? a - amt : a + amt;
+        }, 0));
+
+        wageVsAdvChartInstance = new Chart(ctx1, {
+          type: 'bar',
+          data: {
+            labels,
+            datasets: [
+              { label: 'Work Earned (₹)', data: earnedData, backgroundColor: '#4f46e5', borderRadius: 6 },
+              { label: 'Net Paid/Adv (₹)', data: paidData, backgroundColor: '#f59e0b', borderRadius: 6 }
+            ]
+          },
+          options: { responsive: true, plugins: { legend: { position: 'top' } } }
+        });
+      }
+
+      const ctx2 = document.getElementById('chart-trade-dist')?.getContext('2d');
+      if (ctx2) {
+        if (tradeDistChartInstance) tradeDistChartInstance.destroy();
+        const trades = {};
+        workersList.forEach(w => {
+          const t = w.trade || 'General';
+          const earned = workLogsList.filter(l => isSameWorker(l, w) && (l.status || 'Completed') === 'Completed').reduce((a, b) => a + (Number(b.totalEarned) || 0), 0);
+          trades[t] = (trades[t] || 0) + earned;
+        });
+
+        tradeDistChartInstance = new Chart(ctx2, {
+          type: 'doughnut',
+          data: {
+            labels: Object.keys(trades),
+            datasets: [{
+              data: Object.values(trades),
+              backgroundColor: ['#4f46e5', '#10b981', '#f59e0b', '#8b5cf6', '#ef4444']
+            }]
+          },
+          options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+        });
+      }
+    }
+
+    async function saveWorker(e) {
+      e.preventDefault();
+      const wId = document.getElementById('w-id').value;
+      const name = document.getElementById('w-name').value.trim();
+      const trade = document.getElementById('w-trade').value.trim();
+
+      const nameHi = await autoTranslateToHindi(name);
+      const tradeHi = await autoTranslateToHindi(trade);
+
+      const workerData = {
+        name, nameHi,
+        phone: document.getElementById('w-phone').value.trim(),
+        trade, tradeHi,
+        bankName: document.getElementById('w-bank-name').value.trim(),
+        accountNo: document.getElementById('w-acc-no').value.trim(),
+        ifsc: document.getElementById('w-ifsc').value.trim().toUpperCase(),
+        aadhaar: document.getElementById('w-aadhaar').value.trim(),
+        pan: document.getElementById('w-pan').value.trim().toUpperCase()
+      };
+
+      if (wId) {
+        await db.collection('wm_workers').doc(wId).set(workerData, { merge: true });
+        alert(`Worker Profile Updated! (${nameHi})`);
+      } else {
+        await db.collection('wm_workers').add(workerData);
+        alert(`Worker Registered! (${nameHi})`);
+      }
+      resetWorkerForm();
+    }
+
+    function editWorker(id) {
+      const w = workersList.find(item => item.id === id);
+      if (!w) return;
+
+      document.getElementById('w-id').value = w.id;
+      document.getElementById('w-name').value = w.name || '';
+      document.getElementById('w-phone').value = w.phone || '';
+      document.getElementById('w-trade').value = w.trade || '';
+      document.getElementById('w-bank-name').value = w.bankName || '';
+      document.getElementById('w-acc-no').value = w.accountNo || '';
+      document.getElementById('w-ifsc').value = w.ifsc || '';
+      document.getElementById('w-aadhaar').value = w.aadhaar || '';
+      document.getElementById('w-pan').value = w.pan || '';
+
+      document.getElementById('worker-form-title').textContent = 'Edit Worker Profile / वर्कर प्रोफाइल अपडेट करें';
+      document.getElementById('w-submit-btn').textContent = 'Update Worker / अपडेट करें';
+    }
+
+    function resetWorkerForm() {
+      document.getElementById('worker-form').reset();
+      document.getElementById('w-id').value = '';
+      document.getElementById('worker-form-title').textContent = 'Add New Worker & KYC / नया वर्कर व बैंक खाता जोड़ें';
+      document.getElementById('w-submit-btn').textContent = '+ Save Worker / वर्कर सेव करें';
+    }
+
+    async function deleteWorker(id) {
+      if (confirm('Delete this worker?')) {
+        await db.collection('wm_workers').doc(id).delete();
+      }
+    }
+
+    function renderWorkerDirectory() {
+      const tbody = document.getElementById('worker-table-body');
+      if(!tbody) return;
+      tbody.innerHTML = '';
+      workersList.forEach(w => {
+        const bankInfo = w.accountNo ? `<b>${w.bankName || 'Bank'}</b><br>A/C: ${w.accountNo}<br>IFSC: ${w.ifsc || '-'}` : '<span style="color:var(--text-muted)">No Bank Info</span>';
+        const kycInfo = (w.aadhaar || w.pan) ? `Aadhaar: [Aadhaar Redacted]<br>PAN: ${w.pan || '-'}` : '<span style="color:var(--text-muted)">No ID</span>';
+
+        tbody.innerHTML += `
+          <tr>
+            <td><b>${w.name}</b> ${w.nameHi ? '<br><span class="hi-text">(' + w.nameHi + ')</span>' : ''}</td>
+            <td>${w.phone || '-'}</td>
+            <td><span class="badge badge-success">${w.trade || 'General'}</span></td>
+            <td style="font-size:0.85rem;">${bankInfo}</td>
+            <td style="font-size:0.85rem;">${kycInfo}</td>
+            <td>
+              <div style="display:flex; gap:0.3rem;">
+                <button class="btn btn-outline btn-sm" onclick="openWorkerIDCard('${w.id}')">🪪 ID</button>
+                <button class="btn btn-outline btn-sm" onclick="editWorker('${w.id}')">Edit</button>
+                <button class="btn btn-danger btn-sm" onclick="deleteWorker('${w.id}')">Del</button>
+              </div>
+            </td>
+          </tr>
+        `;
+      });
+    }
+
+    function calcWorkTotal() {
+      const qty = Number(document.getElementById('wl-qty').value) || 0;
+      const rate = Number(document.getElementById('wl-rate').value) || 0;
+      document.getElementById('wl-total').value = (qty * rate).toFixed(2);
+    }
+
+    function calcEditTotal() {
+      const qty = Number(document.getElementById('edit-wl-qty').value) || 0;
+      const rate = Number(document.getElementById('edit-wl-rate').value) || 0;
+      document.getElementById('edit-wl-total').value = (qty * rate).toFixed(2);
+    }
+
+    async function saveWorkLog(e) {
+      e.preventDefault();
+      const saveBtn = document.getElementById('wl-save-btn');
+      if (saveBtn) { saveBtn.disabled = true; saveBtn.textContent = "⏳ Saving..."; }
+
+      try {
+        const mode = document.getElementById('wl-mode').value;
+        const date = document.getElementById('wl-date').value;
+        let task = document.getElementById('wl-task').value.trim();
+        const taskHi = await autoTranslateToHindi(task);
+        const qty = Number(document.getElementById('wl-qty').value) || 0;
+        const rate = Number(document.getElementById('wl-rate').value) || 0;
+        const total = qty * rate;
+        const status = document.getElementById('wl-status').value;
+        const nowTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+        if (mode === 'group') {
+          const checked = document.querySelectorAll('.grp-worker-chk:checked');
+          if (checked.length === 0) {
+            alert('Select at least 1 team worker!');
+            if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = "📸 Save Regular Work Log"; }
+            return;
+          }
+          const perPersonShare = total / checked.length;
+          const perPersonQty = (qty / checked.length).toFixed(2);
+          const groupMembersNames = Array.from(checked).map(c => c.getAttribute('data-name')).join(', ');
+          const groupMembersNamesHi = Array.from(checked).map(c => c.getAttribute('data-namehi')).filter(Boolean).join(', ');
+
+          for (let chk of checked) {
+            const newRecord = {
+              date, time: nowTime, location: currentGPSLocationStr,
+              workerId: chk.value, workerName: chk.getAttribute('data-name'), workerNameHi: chk.getAttribute('data-namehi'),
+              groupMembers: groupMembersNames, groupMembersHi: groupMembersNamesHi, groupSize: checked.length, originalQty: qty,
+              task: `${task} (Group Share of ${checked.length})`, taskHi: `${taskHi} (ग्रुप हिस्सा ${checked.length})`,
+              qty: Number(perPersonQty), rate, totalEarned: perPersonShare, status, isOrderItem: false,
+              photoProof: currentWorkPhotoBase64 || '',
+              createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            };
+            const docRef = await db.collection('wm_work_logs').add(newRecord);
+            workLogsList.push({ id: docRef.id, ...newRecord });
+          }
+        } else {
+          const workerId = document.getElementById('wl-worker-select').value;
+          const worker = workersList.find(w => w.id === workerId);
+          const newRecord = {
+            date, time: nowTime, location: currentGPSLocationStr,
+            workerId: workerId || '', workerName: worker ? worker.name : '', workerNameHi: worker ? (worker.nameHi || '') : '',
+            task, taskHi, qty, rate, totalEarned: total, status, isOrderItem: false,
+            photoProof: currentWorkPhotoBase64 || '',
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+          };
+          const docRef = await db.collection('wm_work_logs').add(newRecord);
+          workLogsList.push({ id: docRef.id, ...newRecord });
+        }
+
+        document.getElementById('work-log-form').reset();
+        document.getElementById('wl-date').value = new Date().toISOString().split('T')[0];
+        currentWorkPhotoBase64 = '';
+        document.getElementById('wl-photo-preview').style.display = 'none';
+        showToast('✅ Regular Work Log Saved Successfully!', 'success');
+        refreshActiveView();
+      } catch (err) {
+        console.error("Save Work Log Error: ", err);
+        showToast('❌ Error saving work log: ' + err.message, 'danger');
+      } finally {
+        if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = "📸 Save Regular Work Log"; }
+      }
+    }
+
+    function openEditWorkLogModal(id) {
+      const log = workLogsList.find(l => l.id === id);
+      if (!log) return;
+      document.getElementById('edit-wl-id').value = log.id;
+      document.getElementById('edit-wl-date').value = log.date || new Date().toISOString().split('T')[0];
+      document.getElementById('edit-wl-worker-select').value = log.workerId || '';
+      document.getElementById('edit-wl-task').value = log.task || '';
+      document.getElementById('edit-wl-qty').value = log.qty || 1;
+      document.getElementById('edit-wl-rate').value = log.rate || 0;
+      document.getElementById('edit-wl-status').value = log.status || 'Completed';
+      document.getElementById('edit-wl-total').value = (Number(log.qty || 1) * Number(log.rate || 0)).toFixed(2);
+      openModal('edit-work-log-modal');
+    }
+
+    async function updateWorkLog() {
+      const id = document.getElementById('edit-wl-id').value;
+      const date = document.getElementById('edit-wl-date').value;
+      const workerId = document.getElementById('edit-wl-worker-select').value;
+      const worker = workersList.find(w => w.id === workerId);
+      const task = document.getElementById('edit-wl-task').value.trim();
+      const taskHi = await autoTranslateToHindi(task);
+      const qty = Number(document.getElementById('edit-wl-qty').value) || 0;
+      const rate = Number(document.getElementById('edit-wl-rate').value) || 0;
+      const status = document.getElementById('edit-wl-status').value || 'Completed';
+
+      await db.collection('wm_work_logs').doc(id).update({
+        date, workerId, workerName: worker ? worker.name : '', workerNameHi: worker ? (worker.nameHi || '') : '',
+        task, taskHi, qty, rate, status, totalEarned: qty * rate
+      });
+      closeModal('edit-work-log-modal');
+      showToast('✅ Work log updated!', 'success');
+      refreshActiveView();
+    }
+
+    function openEditPaymentModal(id) {
+      const p = paymentsList.find(item => item.id === id);
+      if (!p) return;
+      document.getElementById('edit-pay-id').value = p.id;
+      document.getElementById('edit-pay-date').value = p.date || new Date().toISOString().split('T')[0];
+      document.getElementById('edit-pay-worker-select').value = p.workerId || '';
+      document.getElementById('edit-pay-type').value = p.type || 'Advance';
+      document.getElementById('edit-pay-mode').value = p.mode || 'Cash';
+      document.getElementById('edit-pay-amount').value = p.amount || 0;
+      document.getElementById('edit-pay-note').value = p.note || '';
+      openModal('edit-payment-modal');
+    }
+
+    async function updatePaymentLog() {
+      const id = document.getElementById('edit-pay-id').value;
+      const date = document.getElementById('edit-pay-date').value;
+      const workerId = document.getElementById('edit-pay-worker-select').value;
+      const worker = workersList.find(w => w.id === workerId);
+      const type = document.getElementById('edit-pay-type').value;
+      const mode = document.getElementById('edit-pay-mode').value;
+      const amount = Number(document.getElementById('edit-pay-amount').value) || 0;
+      const note = document.getElementById('edit-pay-note').value.trim();
+      const noteHi = await autoTranslateToHindi(note);
+
+      await db.collection('wm_payments').doc(id).update({
+        date, workerId, workerName: worker ? worker.name : '', workerNameHi: worker ? (worker.nameHi || '') : '',
+        type, mode, amount, note, noteHi
+      });
+      closeModal('edit-payment-modal');
+      showToast('✅ Payment updated!', 'success');
+      refreshActiveView();
+    }
+
+    async function saveOrderLog(e) {
+      e.preventDefault();
+      const mode = document.getElementById('ol-mode').value;
+      const date = document.getElementById('ol-date').value;
+      const taskInput = document.getElementById('ol-task').value.trim().replace(/^(📦 SPECIAL ORDER:\s*)+/i, '');
+      const task = `📦 SPECIAL ORDER: ${taskInput}`;
+      const taskHi = await autoTranslateToHindi(task);
+      const qty = Number(document.getElementById('ol-qty').value);
+      const nowTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+      if (mode === 'group') {
+        const checked = document.querySelectorAll('.ol-grp-worker-chk:checked');
+        if (checked.length === 0) return alert('Select at least 1 team worker!');
+        const perPersonQty = (qty / checked.length).toFixed(2);
+        const groupMembersNames = Array.from(checked).map(c => c.getAttribute('data-name')).join(', ');
+        const groupMembersNamesHi = Array.from(checked).map(c => c.getAttribute('data-namehi')).filter(Boolean).join(', ');
+
+        for (let chk of checked) {
+          await db.collection('wm_work_logs').add({
+            date, time: nowTime, location: currentGPSLocationStr,
+            workerId: chk.value, workerName: chk.getAttribute('data-name'), workerNameHi: chk.getAttribute('data-namehi'),
+            groupMembers: groupMembersNames, groupMembersHi: groupMembersNamesHi, groupSize: checked.length, originalQty: qty,
+            task: `${task} (Group Share of ${checked.length})`, taskHi: `${taskHi} (ग्रुप हिस्सा ${checked.length})`,
+            qty: Number(perPersonQty), rate: 0, totalEarned: 0, status: 'Pending', isOrderItem: true,
+            photoProof: currentOrderSlipBase64 || '',
+            inProgressPhoto: currentInProgPhotoBase64 || ''
+          });
+        }
+      } else {
+        const workerId = document.getElementById('ol-worker-select').value;
+        const worker = workersList.find(w => w.id === workerId);
+        await db.collection('wm_work_logs').add({
+          date, time: nowTime, location: currentGPSLocationStr,
+          workerId, workerName: worker ? worker.name : '', workerNameHi: worker ? (worker.nameHi || '') : '',
+          task, taskHi, qty, rate: 0, totalEarned: 0, status: 'Pending', isOrderItem: true,
+          photoProof: currentOrderSlipBase64 || '',
+          inProgressPhoto: currentInProgPhotoBase64 || ''
+        });
+      }
+      document.getElementById('order-log-form').reset();
+      currentOrderSlipBase64 = '';
+      currentInProgPhotoBase64 = '';
+      const slipPrev = document.getElementById('ol-slip-preview');
+      if(slipPrev) slipPrev.style.display = 'none';
+      const inprogPrev = document.getElementById('ol-inprog-preview');
+      if(inprogPrev) inprogPrev.style.display = 'none';
+      alert('Special Order Log Saved!');
+      refreshActiveView();
+    }
+
+    function toggleWorkStatus(id, currentStatus, isOrderItem) {
+      if ((isOrderItem && currentStatus === 'Pending') || currentStatus === 'Pending') {
+        document.getElementById('modal-log-id').value = id;
+        document.getElementById('modal-final-rate').value = '';
+        currentModalFinalPhotoBase64 = '';
+        const finalPrev = document.getElementById('modal-final-preview');
+        if(finalPrev) finalPrev.style.display = 'none';
+        openModal('order-complete-modal');
+      } else {
+        const newStatus = currentStatus === 'Pending' ? 'Completed' : 'Pending';
+        db.collection('wm_work_logs').doc(id).update({ status: newStatus }).then(() => refreshActiveView());
+      }
+    }
+
+    async function toggleRegularWorkStatus(id, currentStatus) {
+      const newStatus = currentStatus === 'Pending' ? 'Completed' : 'Pending';
+      await db.collection('wm_work_logs').doc(id).update({ status: newStatus });
+      showToast(`✅ Work marked as ${newStatus}!`, 'success');
+      refreshActiveView();
+    }
+
+    async function submitOrderCompletion() {
+      const id = document.getElementById('modal-log-id').value;
+      const rateVal = Number(document.getElementById('modal-final-rate').value);
+      if (isNaN(rateVal) || rateVal < 0) return alert('Enter valid rate!');
+
+      const log = workLogsList.find(l => l.id === id);
+      if (!log) return;
+
+      const updateData = { status: 'Completed', rate: rateVal };
+      if (currentModalFinalPhotoBase64) {
+        updateData.photoProof = currentModalFinalPhotoBase64;
+      }
+
+      if (log.groupMembers && log.time && log.task) {
+        const relatedGroupLogs = workLogsList.filter(l => l.isOrderItem === true && l.time === log.time && l.date === log.date && l.task === log.task);
+        for (let rLog of relatedGroupLogs) {
+          const rQty = Number(rLog.qty);
+          const validQty = isNaN(rQty) ? 1 : rQty;
+          await db.collection('wm_work_logs').doc(rLog.id).update({
+            status: 'Completed', rate: rateVal, totalEarned: validQty * rateVal, ...(currentModalFinalPhotoBase64 ? { photoProof: currentModalFinalPhotoBase64 } : {})
+          });
+        }
+      } else {
+        const qty = Number(log.qty);
+        const validQty = isNaN(qty) ? 1 : qty;
+        await db.collection('wm_work_logs').doc(id).update({ ...updateData, totalEarned: validQty * rateVal });
+      }
+
+      closeModal('order-complete-modal');
+      refreshActiveView();
+    }
+
+    async function deleteWorkLog(id) {
+      if (confirm('Delete log?')) await db.collection('wm_work_logs').doc(id).delete();
+    }
+
+    function renderWorkLogs() {
+      const tbodyRegular = document.getElementById('work-log-table');
+      if(tbodyRegular) {
+        tbodyRegular.innerHTML = '';
+        const filterWorkerId = document.getElementById('wl-filter-worker-select')?.value || 'ALL';
+        let regularLogs = workLogsList.filter(l => l.isOrderItem !== true && isDateInRange(l.date, 'wl-from-date', 'wl-to-date'));
+
+        if (filterWorkerId !== 'ALL') {
+          const targetWorker = workersList.find(w => w.id === filterWorkerId);
+          regularLogs = regularLogs.filter(l => isSameWorker(l, targetWorker || { id: filterWorkerId }));
+        }
+
+        let totalQty = 0, totalCompletedVal = 0, totalPendingVal = 0;
+        regularLogs.forEach(wl => {
+          const status = wl.status || 'Completed';
+          totalQty += Number(wl.qty) || 0;
+          if (status === 'Completed') totalCompletedVal += Number(wl.totalEarned) || 0;
+          else totalPendingVal += Number(wl.totalEarned) || 0;
+
+          let thumbHtml = '';
+          if (wl.photoProof) {
+            thumbHtml += `<img src="${wl.photoProof}" class="work-thumb" onclick="openPhotoLightbox('${wl.photoProof}', 'Work Proof')">`;
+          }
+          if (!thumbHtml) {
+            thumbHtml = '<span style="color:var(--text-muted); font-size:0.75rem;">No Photo</span>';
+          }
+
+          let workerDisplayStr = wl.groupMembers ? `<b>Team:</b> ${wl.groupMembers}` : `<b>${wl.workerName || 'Worker'}</b>`;
+
+          tbodyRegular.innerHTML += `
+            <tr>
+              <td>${thumbHtml}</td>
+              <td>${wl.date || ''} ${wl.time ? '<br><span style="font-size:0.75rem; color:var(--text-muted);">' + wl.time + '</span>' : ''}</td>
+              <td>${workerDisplayStr}</td>
+              <td>${wl.task || '-'}</td>
+              <td style="font-size:0.78rem; color:var(--text-secondary);">${wl.location || 'Workshop'}</td>
+              <td><b>${wl.qty || 0} Pcs</b> @ ₹${wl.rate || 0}</td>
+              <td><b>₹${Number(wl.totalEarned || 0).toFixed(2)}</b></td>
+              <td><span class="badge ${status === 'Completed' ? 'badge-success' : 'badge-warning'}">${status}</span></td>
+              <td class="hide-pdf">
+                <div style="display:flex; gap:0.3rem; flex-wrap:wrap;">
+                  <button class="btn ${status === 'Pending' ? 'btn-success' : 'btn-warning'} btn-sm" onclick="toggleRegularWorkStatus('${wl.id}', '${status}')">
+                    ${status === 'Pending' ? 'Mark Completed' : 'Mark Pending'}
+                  </button>
+                  <button class="btn btn-outline btn-sm" onclick="openEditWorkLogModal('${wl.id}')">Edit</button>
+                  <button class="btn btn-danger btn-sm" onclick="deleteWorkLog('${wl.id}')">X</button>
+                </div>
+              </td>
+            </tr>
+          `;
+        });
+        const qtyEl = document.getElementById('wl-summary-qty');
+        if(qtyEl) qtyEl.textContent = `${totalQty.toFixed(2)} Pcs`;
+        const earnedEl = document.getElementById('wl-summary-earned');
+        if(earnedEl) earnedEl.textContent = `₹${totalCompletedVal.toFixed(2)}`;
+        const pendingEl = document.getElementById('wl-summary-pending');
+        if(pendingEl) pendingEl.textContent = `₹${totalPendingVal.toFixed(2)}`;
+        
+        const nowStr = new Date().toLocaleString();
+        const dateSpan = document.getElementById('wl-report-date');
+        if(dateSpan) dateSpan.textContent = nowStr;
+
+        const workerTitle = document.getElementById('wl-report-worker-title');
+        if(workerTitle) {
+          if(filterWorkerId === 'ALL') {
+            workerTitle.textContent = 'All Workers';
+          } else {
+            const wObj = workersList.find(w => w.id === filterWorkerId);
+            workerTitle.textContent = wObj ? wObj.name : 'Selected Worker';
+          }
+        }
+      }
+
+      const tbodyOrder = document.getElementById('order-log-table');
+      if (tbodyOrder) {
+        tbodyOrder.innerHTML = '';
+        const orderLogs = workLogsList.filter(l => l.isOrderItem === true && isDateInRange(l.date, 'ol-from-date', 'ol-to-date'));
+        orderLogs.forEach(ol => {
+          const isCompleted = ol.status === 'Completed';
+          let thumbHtml = '';
+          if (ol.photoProof) {
+            thumbHtml += `<img src="${ol.photoProof}" class="work-thumb" onclick="openPhotoLightbox('${ol.photoProof}', 'Order Slip Photo')">`;
+          }
+          if (ol.inProgressPhoto) {
+            thumbHtml += `<img src="${ol.inProgressPhoto}" class="work-thumb" onclick="openPhotoLightbox('${ol.inProgressPhoto}', 'In-Progress Work Photo')">`;
+          }
+          if (!thumbHtml) {
+            thumbHtml = '<span style="color:var(--text-muted); font-size:0.75rem;">No Photo</span>';
+          }
+
+          let cleanTaskName = (ol.task || '-').replace(/^(📦 SPECIAL ORDER:\s*)+/i, '📦 SPECIAL ORDER: ');
+          let workerDisplayStr = `<b>${ol.workerName || 'Worker'}</b>`;
+          if (ol.groupMembers) {
+            workerDisplayStr += `<br><span style="font-size:0.75rem; color:var(--text-muted);">Group: ${ol.groupMembers}</span>`;
+          }
+
+          tbodyOrder.innerHTML += `
+            <tr>
+              <td>${thumbHtml}</td>
+              <td>${ol.date || ''} ${ol.time ? '<br><span style="font-size:0.75rem; color:var(--text-muted);">' + ol.time + '</span>' : ''}</td>
+              <td>${workerDisplayStr}</td>
+              <td><b>${cleanTaskName}</b></td>
+              <td style="font-size:0.78rem; color:var(--text-secondary);">${ol.location || 'Workshop'}</td>
+              <td>${ol.qty !== undefined ? ol.qty : 0} Pcs @ ₹${ol.rate || 0}</td>
+              <td><b>₹${(ol.totalEarned || 0).toFixed(2)}</b></td>
+              <td><span class="badge ${isCompleted ? 'badge-success' : 'badge-warning'}">${isCompleted ? 'Completed' : 'In-Progress'}</span></td>
+              <td class="hide-pdf">
+                <button class="btn btn-success btn-sm" onclick="toggleWorkStatus('${ol.id}', '${ol.status || 'Pending'}', true)">
+                  ${isCompleted ? 'Edit Rate' : 'Complete'}
+                </button>
+                <button class="btn btn-danger btn-sm" onclick="deleteWorkLog('${ol.id}')">X</button>
+              </td>
+            </tr>
+          `;
+        });
+      }
+
+      renderDailyProductionLogs();
+    }
+
+    function renderDailyProductionLogs() {
+      const tbody = document.getElementById('daily-production-table');
+      if(!tbody) return;
+      tbody.innerHTML = '';
+
+      const productionMap = {};
+
+      const filteredWorkLogs = workLogsList.filter(log => isDateInRange(log.date, 'dp-from-date', 'dp-to-date'));
+
+      filteredWorkLogs.forEach(log => {
+        const dateKey = log.date || 'Unknown Date';
+        let rawTask = (log.task || 'General Production').replace(/ \(Group Share of \d+\)/, '');
+        rawTask = rawTask.replace(/^(📦 SPECIAL ORDER:\s*)+/i, '📦 SPECIAL ORDER: ');
+        const entryCategory = log.isOrderItem ? 'Special Order Almari' : 'Regular Work Log';
+        
+        const signature = log.time ? `${dateKey}_${rawTask}_${log.time}` : `${dateKey}_${rawTask}_${entryCategory}`;
+
+        if (!productionMap[signature]) {
+          productionMap[signature] = {
+            date: dateKey,
+            task: rawTask,
+            category: entryCategory,
+            totalQty: log.originalQty ? Number(log.originalQty) : (Number(log.qty) || 0)
+          };
+        }
+      });
+
+      const aggregatedList = Object.values(productionMap).sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+
+      let grandTotalQty = 0;
+      const uniqueDays = new Set();
+
+      aggregatedList.forEach(item => {
+        uniqueDays.add(item.date);
+        grandTotalQty += item.totalQty;
+
+        tbody.innerHTML += `
+          <tr>
+            <td><b>${item.date}</b></td>
+            <td><b>${item.task}</b></td>
+            <td><span class="badge ${item.category === 'Special Order Almari' ? 'badge-warning' : 'badge-primary'}">${item.category}</span></td>
+            <td><b>${item.totalQty.toFixed(2)} Pcs</b></td>
+          </tr>
+        `;
+      });
+
+      const daysEl = document.getElementById('dp-total-days');
+      if (daysEl) daysEl.textContent = `${uniqueDays.size} Days`;
+
+      const qtyEl = document.getElementById('dp-total-qty');
+      if (qtyEl) qtyEl.textContent = `${grandTotalQty.toFixed(2)} Pcs`;
+
+      const dateReportSpan = document.getElementById('dp-report-date');
+      if (dateReportSpan) dateReportSpan.textContent = new Date().toLocaleString();
+    }
+
+    function printWorkLogReport() { window.print(); }
+    function printOrderLogReport() { window.print(); }
+    function printDailyProductionReport() { window.print(); }
+
+    async function savePaymentLog(e) {
+      e.preventDefault();
+      const workerId = document.getElementById('pay-worker-select').value;
+      const worker = workersList.find(w => w.id === workerId);
+      const mode = document.getElementById('pay-mode').value;
+      const txId = document.getElementById('pay-tx-id').value.trim();
+      const note = document.getElementById('pay-note').value.trim();
+      const noteHi = await autoTranslateToHindi(note);
+
+      await db.collection('wm_payments').add({
+        date: document.getElementById('pay-date').value,
+        workerId, workerName: worker ? worker.name : '', workerNameHi: worker ? (worker.nameHi || '') : '',
+        type: document.getElementById('pay-type').value, mode, txId,
+        amount: Number(document.getElementById('pay-amount').value),
+        note, noteHi
+      });
+      document.getElementById('payment-form').reset();
+      alert('Payment Recorded!');
+      refreshActiveView();
+    }
+
+    async function deletePaymentLog(id) {
+      if (confirm('Delete payment?')) await db.collection('wm_payments').doc(id).delete();
+    }
+
+    function renderPaymentLogs() {
+      const tbody = document.getElementById('payment-table-body');
+      if(!tbody) return;
+      tbody.innerHTML = '';
+      
+      const filteredPayments = paymentsList.filter(p => isDateInRange(p.date, 'pay-from-date', 'pay-to-date'));
+
+      filteredPayments.forEach(p => {
+        const isReturn = p.type === 'Advance Return' || p.type === 'Credit / Extra Income';
+        tbody.innerHTML += `
+          <tr>
+            <td>${p.date}</td>
+            <td><b>${p.workerName}</b></td>
+            <td>${p.type}</td>
+            <td>${p.mode} ${p.txId ? '(' + p.txId + ')' : ''}</td>
+            <td><b style="color: ${isReturn ? 'var(--success)' : 'var(--danger)'};">₹${Number(p.amount || 0).toFixed(2)}</b></td>
+            <td>${p.note || '-'}</td>
+            <td>
+              <button class="btn btn-outline btn-sm" onclick="openEditPaymentModal('${p.id}')">Edit</button>
+              <button class="btn btn-danger btn-sm" onclick="deletePaymentLog('${p.id}')">X</button>
+            </td>
+          </tr>
+        `;
+      });
+    }
+
+    function renderDashboardSummary() {
+      let overallWork = 0, overallPaid = 0;
+      workLogsList.filter(l => (l.status || 'Completed') === 'Completed').forEach(w => overallWork += (Number(w.totalEarned) || 0));
+      paymentsList.forEach(p => {
+        const amt = Number(p.amount) || 0;
+        if (p.type === 'Advance Return' || p.type === 'Credit / Extra Income') overallPaid -= amt;
+        else overallPaid += amt;
+      });
+
+      const wCountEl = document.getElementById('dash-total-workers');
+      const wWorkEl = document.getElementById('dash-total-work-val');
+      const wPaidEl = document.getElementById('dash-total-paid');
+      const netBalEl = document.getElementById('dash-net-balance');
+
+      if(wCountEl) wCountEl.textContent = workersList.length;
+      if(wWorkEl) wWorkEl.textContent = `₹${overallWork.toFixed(2)}`;
+      if(wPaidEl) wPaidEl.textContent = `₹${overallPaid.toFixed(2)}`;
+
+      const net = overallWork - overallPaid;
+      if (netBalEl) {
+        netBalEl.textContent = `₹${Math.abs(net).toFixed(2)} ${net < 0 ? '(Adv Extra)' : '(Payable)'}`;
+        netBalEl.style.color = net >= 0 ? 'var(--success)' : 'var(--danger)';
+      }
+
+      const tbody = document.getElementById('dash-summary-table');
+      if(!tbody) return;
+      tbody.innerHTML = '';
+
+      workersList.forEach(w => {
+        const wWork = workLogsList.filter(l => isSameWorker(l, w) && (l.status || 'Completed') === 'Completed').reduce((sum, item) => sum + (Number(item.totalEarned) || 0), 0);
+        const wPaid = paymentsList.filter(p => isSameWorker(p, w)).reduce((sum, item) => {
+          const amt = Number(item.amount) || 0;
+          return (item.type === 'Advance Return' || item.type === 'Credit / Extra Income') ? sum - amt : sum + amt;
+        }, 0);
+        const wNet = wWork - wPaid;
+
+        tbody.innerHTML += `
+          <tr>
+            <td><b>${w.name}</b></td>
+            <td>${w.trade || 'General'}</td>
+            <td>₹${wWork.toFixed(2)}</td>
+            <td>₹${wPaid.toFixed(2)}</td>
+            <td><b style="color: ${wNet >= 0 ? 'var(--success)' : 'var(--danger)'}">₹${Math.abs(wNet).toFixed(2)}</b></td>
+            <td><button class="btn btn-outline btn-sm" onclick="viewWorkerPassbook('${w.id}')">Passbook</button></td>
+          </tr>
+        `;
+      });
+      renderWageCharts();
+    }
+
+    function viewWorkerPassbook(workerId) {
+      document.getElementById('passbook-worker-select').value = workerId;
+      switchTab('ledger', document.querySelectorAll('.tab-btn')[8]);
+      renderWorkerPassbook();
+    }
+
+    function renderWorkerPassbook() {
+      const workerId = document.getElementById('passbook-worker-select').value;
+      const filterType = document.getElementById('passbook-filter-type')?.value || 'ALL';
+      const tbody = document.getElementById('passbook-table-body');
+      if(!tbody) return;
+      tbody.innerHTML = '';
+      if (!workerId) return;
+
+      const worker = workersList.find(w => w.id === workerId);
+      if(worker) {
+        const detailsElem = document.getElementById('pb-worker-details');
+        if(detailsElem) {
+          detailsElem.innerHTML = `
+            <span>Worker: ${worker.name} ${worker.nameHi ? '(' + worker.nameHi + ')' : ''} | Mobile: ${worker.phone || 'N/A'}</span>
+            <span>Trade: ${worker.trade || 'General'}</span>
+          `;
+        }
+      }
+
+      let wWorks = workLogsList.filter(l => isSameWorker(l, worker || { id: workerId }) && isDateInRange(l.date, 'pb-from-date', 'pb-to-date')).map(l => {
+        let cleanTask = (l.task || 'Production').replace(/^(📦 SPECIAL ORDER:\s*)+/i, '📦 SPECIAL ORDER: ');
+        const isComp = (l.status || 'Completed') === 'Completed';
+        const earnedVal = isComp ? (Number(l.totalEarned) || 0) : 0;
+        const qtyVal = l.qty !== undefined ? l.qty : 0;
+        return {
+          date: l.date,
+          type: 'WORK',
+          desc: isComp ? `${cleanTask}` : `${cleanTask} (In-Progress / Rate Pending)`,
+          detail: `${qtyVal} Pcs @ ₹${l.rate || 0}`,
+          credit: earnedVal,
+          debit: 0,
+          isCompleted: isComp
+        };
+      });
+
+      let wPays = paymentsList.filter(p => isSameWorker(p, worker || { id: workerId }) && isDateInRange(p.date, 'pb-from-date', 'pb-to-date')).map(p => {
+        const isCreditType = p.type === 'Advance Return' || p.type === 'Credit / Extra Income';
+        const amt = Number(p.amount) || 0;
+        const utrInfo = p.txId ? ` - UTR: ${p.txId}` : '';
+        const modeDetail = `${p.mode || 'Cash'}${utrInfo}${p.note ? ' (' + p.note + ')' : ''}`;
+        return {
+          date: p.date,
+          type: isCreditType ? 'RETURN' : 'PAYMENT',
+          desc: `${p.type}`,
+          detail: modeDetail,
+          credit: isCreditType ? amt : 0,
+          debit: isCreditType ? 0 : amt,
+          isCompleted: true
+        };
+      });
+
+      const totEarned = wWorks.reduce((s, i) => s + i.credit, 0);
+      const totPaidNet = wPays.reduce((s, i) => s + (i.debit - i.credit), 0);
+      const netBal = totEarned - totPaidNet;
+
+      const uniqueWorkDays = new Set(wWorks.filter(w => w.isCompleted).map(w => w.date).filter(Boolean)).size;
+      const daysCountEl = document.getElementById('pb-days-count');
+      if (daysCountEl) daysCountEl.textContent = `${uniqueWorkDays} Days Worked`;
+
+      const earnedEl = document.getElementById('pb-total-earned');
+      const paidEl = document.getElementById('pb-total-paid');
+      const netBalEl = document.getElementById('pb-net-balance');
+
+      if(earnedEl) earnedEl.textContent = `₹${totEarned.toFixed(2)}`;
+      if(paidEl) paidEl.textContent = `₹${totPaidNet.toFixed(2)}`;
+      if(netBalEl) netBalEl.textContent = `₹${Math.abs(netBal).toFixed(2)} ${netBal >= 0 ? '(Due)' : '(Adv Extra)'}`;
+
+      let fullTx = [...wWorks, ...wPays].sort((a,b) => (a.date || '').localeCompare(b.date || ''));
+
+      let runningBal = 0;
+      fullTx.forEach(tx => {
+        runningBal += (tx.credit - tx.debit);
+
+        let matchesFilter = false;
+        if (filterType === 'ALL') matchesFilter = true;
+        else if (filterType === 'WORK' && tx.type === 'WORK') matchesFilter = true;
+        else if (filterType === 'PAYMENT' && tx.type === 'PAYMENT') matchesFilter = true;
+        else if (filterType === 'RETURN' && tx.type === 'RETURN') matchesFilter = true;
+
+        if (matchesFilter) {
+          tbody.innerHTML += `
+            <tr>
+              <td>${tx.date || ''}</td>
+              <td><b>${tx.desc || ''}</b></td>
+              <td>${tx.detail || ''}</td>
+              <td style="color: var(--success); font-weight:600;">${tx.credit > 0 ? '₹' + tx.credit.toFixed(2) : '-'}</td>
+              <td style="color: var(--danger); font-weight:600;">${tx.debit > 0 ? '₹' + tx.debit.toFixed(2) : '-'}</td>
+              <td><b>₹${runningBal.toFixed(2)}</b></td>
+            </tr>
+          `;
+        }
+      });
+    }
+
+    function sharePassbookWhatsApp() {
+      const workerId = document.getElementById('passbook-worker-select').value;
+      if (!workerId) return alert('Choose worker!');
+      const worker = workersList.find(w => w.id === workerId);
+      const text = `Passbook Statement for ${worker ? worker.name : workerId}`;
+      window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
+    }
+
+    function printPassbook() { window.print(); }
+
+    function refreshActiveView() {
+      renderWorkerDirectory();
+      renderWorkLogs();
+      renderPaymentLogs();
+      renderToolTable();
+      renderDashboardSummary();
+      renderWorkerPassbook();
+      generateAIWorkerInsights();
+    }
+
+    function openModal(id) { document.getElementById(id).classList.add('active'); }
+    function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+    function showToast(msg, type = 'info') {
+      const container = document.getElementById('toast-container');
+      if(!container) return;
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+      toast.textContent = msg;
+      container.appendChild(toast);
+      setTimeout(() => toast.remove(), 2500);
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      ['wl-date', 'ol-date', 'pay-date', 'tool-date'].forEach(id => {
+        const el = document.getElementById(id);
+        if(el) el.value = new Date().toISOString().split('T')[0];
+      });
+      initFirebase();
+    });
+  </script>
+</body>
+</html>
