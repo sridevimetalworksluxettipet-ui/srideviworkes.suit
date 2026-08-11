@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Sri Devi Metal Works - Worker Wage, KYC, Tools & AI Suite</title>
+  <title>Sri Devi Metal Works - Ultimate Suite & GPS Telemetry Tracker</title>
 
   <!-- MODERN GOOGLE FONT: PLUS JAKARTA SANS -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -51,28 +51,6 @@
       --radius-md: 14px;
       --radius-lg: 20px;
       --radius-full: 9999px;
-    }
-
-    [data-theme="dark"] {
-      --bg-primary: #0f172a;
-      --bg-surface: #1e293b;
-      --bg-card: #1e293b;
-      --text-primary: #f8fafc;
-      --text-secondary: #cbd5e1;
-      --text-muted: #64748b;
-      --border-color: #334155;
-      --primary: #3b82f6;
-      --primary-hover: #60a5fa;
-      --primary-light: rgba(59, 130, 246, 0.15);
-      --secondary: #94a3b8;
-      --success: #10b981;
-      --success-light: rgba(16, 185, 129, 0.15);
-      --warning: #f59e0b;
-      --warning-light: rgba(245, 158, 11, 0.15);
-      --danger: #ef4444;
-      --danger-light: rgba(239, 68, 68, 0.15);
-      --ai-purple: #a78bfa;
-      --ai-purple-light: rgba(167, 139, 250, 0.15);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif; -webkit-tap-highlight-color: transparent; }
@@ -163,12 +141,10 @@
 
     .btn { padding: 0.65rem 1.15rem; border-radius: var(--radius-md); border: none; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; font-size: 0.88rem; transition: all 0.25s ease; min-height: 42px; }
     .btn-primary { background: linear-gradient(135deg, #4f46e5 0%, #2563eb 100%); color: white; box-shadow: 0 6px 16px rgba(79, 70, 229, 0.3); }
-    .btn-primary:hover { opacity: 0.95; transform: translateY(-2px); box-shadow: 0 8px 20px rgba(79, 70, 229, 0.4); }
     .btn-success { background: var(--success); color: white; box-shadow: 0 6px 16px rgba(16, 185, 129, 0.25); }
     .btn-warning { background: var(--warning); color: white; }
     .btn-danger { background: var(--danger); color: white; }
     .btn-ai { background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%); color: white; box-shadow: 0 6px 16px rgba(139, 92, 246, 0.3); }
-    .btn-ai:hover { opacity: 0.95; transform: translateY(-2px); }
     .btn-outline { background: transparent; border: 1.5px solid var(--border-color); color: var(--text-primary); }
     .btn-outline:hover { background-color: var(--bg-primary); border-color: var(--text-secondary); }
     .btn-sm { padding: 0.4rem 0.8rem; font-size: 0.8rem; border-radius: var(--radius-md); min-height: 36px; }
@@ -190,6 +166,11 @@
 
     .view-section { display: none; }
     .view-section.active { display: block; }
+
+    .ai-geofence-box { background: var(--ai-purple-light); border: 1.5px solid rgba(139, 92, 246, 0.3); border-radius: var(--radius-md); padding: 1rem; margin-bottom: 1.25rem; font-size: 0.88rem; font-weight: 600; color: var(--ai-purple); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; transition: all 0.3s ease; }
+    .alert-flash { animation: flashAlarm 1s infinite alternate; }
+    @keyframes flashAlarm { from { background-color: rgba(239, 68, 68, 0.1); border-color: var(--danger); } to { background-color: rgba(239, 68, 68, 0.3); border-color: var(--danger); } }
+    .map-frame { width: 100%; height: 350px; border: none; border-radius: var(--radius-md); margin-top: 0.5rem; }
 
     .worker-checkbox-grid {
       display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
@@ -227,17 +208,7 @@
     }
 
     .report-header { border-bottom: 2.5px solid #0f172a; padding-bottom: 12px; margin-bottom: 14px; }
-
-    .kyc-box {
-      background: var(--primary-light);
-      border: 1px solid rgba(79, 70, 229, 0.25);
-      padding: 0.8rem 1rem;
-      border-radius: var(--radius-md);
-      margin-bottom: 1.15rem;
-      font-size: 0.84rem;
-      line-height: 1.5;
-    }
-
+    .kyc-box { background: var(--primary-light); border: 1px solid rgba(79, 70, 229, 0.25); padding: 0.8rem 1rem; border-radius: var(--radius-md); margin-bottom: 1.15rem; font-size: 0.84rem; line-height: 1.5; }
     .hi-text { color: var(--primary); font-weight: 700; }
 
     .toast-container { position: fixed; bottom: 1.5rem; left: 1rem; right: 1rem; display: flex; flex-direction: column; gap: 0.5rem; z-index: 1100; pointer-events: none; }
@@ -277,10 +248,10 @@
       <div class="brand-logo">S</div>
       <div>
         <div class="brand-title">Sri Devi Metal Works</div>
-        <div class="brand-sub">Worker Wage, KYC, Tools & AI Intelligence Suite</div>
+        <div class="brand-sub">Worker Wage, KYC, Tools & GPS Telemetry Intelligence Suite</div>
       </div>
     </div>
-    <div style="display:flex; align-items:center; gap:0.75rem;">
+    <div style="display:flex; align-items:center; gap:0.75rem; flex-wrap:wrap;">
       <div id="google_translate_element"></div>
       <span id="sync-badge" class="badge badge-success">🌐 Cloud Active</span>
     </div>
@@ -298,6 +269,10 @@
     <button class="tab-btn" onclick="switchTab('workers', this)">
       👷 Worker Master & KYC
       <span class="hi">वर्कर प्रोफाइल व बैंक खाता</span>
+    </button>
+    <button class="tab-btn" onclick="switchTab('telemetry', this)">
+      📍 GPS & Geofence Live
+      <span class="hi">लाइव जीपीएस व जियो-फेंसिंग</span>
     </button>
     <button class="tab-btn" onclick="switchTab('work-entry', this)">
       ⚙️ Regular Work Log
@@ -387,7 +362,7 @@
 
     <!-- 2. AI WORKER HISAAB VIEW -->
     <section id="view-ai-hisaab" class="view-section">
-      <div class="ai-hero-card">
+      <div class="ai-hero-card" style="background:var(--bg-surface); padding:1.35rem; border-radius:var(--radius-lg); border:1px solid var(--border-color); margin-bottom:1.5rem; box-shadow:var(--shadow-md);">
         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; margin-bottom:1rem;">
           <div>
             <span class="badge badge-ai" style="margin-bottom:0.4rem;">🤖 AI Worker Intelligence Active</span>
@@ -400,16 +375,14 @@
         <div style="margin-top: 1rem;">
           <label style="display:block; font-size:0.85rem; font-weight:700; margin-bottom:0.4rem; color:var(--text-secondary);">Ask Voice / Text Hisaab Assistant / हिसाब सवाल पूछें</label>
           <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
-            <input type="text" id="ai-worker-query" class="form-control" style="flex:1; min-width:240px;" placeholder="Type or speak e.g. 'Surjit hisaab', 'High advance warning', 'Next week forecast'..." onkeypress="if(event.key==='Enter') runWorkerAIQuery()">
+            <input type="text" id="ai-worker-query" class="form-control" style="flex:1; min-width:240px;" placeholder="Type or speak e.g. 'Surjit hisaab', 'High advance warning'..." onkeypress="if(event.key==='Enter') runWorkerAIQuery()">
             <button class="btn btn-outline" type="button" onclick="startVoiceRecognition('ai-worker-query')">🎙️ Speak (बोलें)</button>
             <button class="btn btn-ai" onclick="runWorkerAIQuery()">Ask AI Assistant</button>
           </div>
           <div style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-top:0.65rem;">
-            <span class="ai-chip" onclick="quickWorkerQuery('advance-risk')">⚠️ High Advance Warning</span>
-            <span class="ai-chip" onclick="quickWorkerQuery('payout-forecast')">📈 Wage Payout & Production Forecast</span>
-            <span class="ai-chip" onclick="quickWorkerQuery('surjit')">👤 Surjit Hisaab</span>
-            <span class="ai-chip" onclick="quickWorkerQuery('pannalal')">👤 Pannalal Hisaab</span>
-            <span class="ai-chip" onclick="quickWorkerQuery('summary')">📊 Workshop Wage Overview</span>
+            <span class="badge badge-ai" style="cursor:pointer;" onclick="quickWorkerQuery('advance-risk')">⚠️ High Advance Warning</span>
+            <span class="badge badge-ai" style="cursor:pointer;" onclick="quickWorkerQuery('payout-forecast')">📈 Wage Payout Forecast</span>
+            <span class="badge badge-ai" style="cursor:pointer;" onclick="quickWorkerQuery('summary')">📊 Workshop Wage Overview</span>
           </div>
         </div>
       </div>
@@ -418,12 +391,12 @@
         <h3 style="margin-bottom:0.75rem; display:flex; align-items:center; gap:0.5rem;">
           <span style="color:var(--ai-purple);">💬</span> Assistant Response / एआई का उत्तर
         </h3>
-        <div id="ai-worker-response" class="ai-response-box">Select a quick chip above or type a worker query to inspect detailed hisaab.</div>
+        <div id="ai-worker-response" style="font-size:0.88rem; color:var(--text-secondary); background:var(--bg-primary); padding:1rem; border-radius:var(--radius-md); border:1px solid var(--border-color);">Select a quick chip above or type a worker query to inspect detailed hisaab.</div>
       </div>
 
       <div class="card" style="margin-bottom:1.5rem; border-top:4px solid var(--primary);">
         <h3 style="margin-bottom:1rem; color:var(--primary); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap;">
-          <span>⭐ Worker Productivity Score & Output Leaderboard (Mistri, Painter & Helper)</span>
+          <span>⭐ Worker Productivity Score & Output Leaderboard</span>
           <span class="badge badge-primary">Output Ranked</span>
         </h3>
         <div id="productivity-leaderboard-container"></div>
@@ -477,23 +450,23 @@
           <div class="form-row">
             <div class="form-group">
               <label>Bank Name <span class="hi-lbl">(बैंक का नाम)</span></label>
-              <input type="text" id="w-bank-name" class="form-control" placeholder="e.g. SBI, HDFC, Union Bank">
+              <input type="text" id="w-bank-name" class="form-control" placeholder="e.g. SBI, HDFC">
             </div>
             <div class="form-group">
               <label>Account Number <span class="hi-lbl">(खाता संख्या)</span></label>
-              <input type="text" id="w-acc-no" class="form-control" placeholder="e.g. 30123456789">
+              <input type="text" id="w-acc-no" class="form-control" placeholder="Account Number">
             </div>
             <div class="form-group">
               <label>IFSC Code <span class="hi-lbl">(आईएफएससी कोड)</span></label>
-              <input type="text" id="w-ifsc" class="form-control" placeholder="e.g. SBIN0001234" style="text-transform:uppercase;">
+              <input type="text" id="w-ifsc" class="form-control" placeholder="IFSC" style="text-transform:uppercase;">
             </div>
           </div>
 
           <h4 style="margin: 1.25rem 0 0.85rem 0; color:var(--primary); font-size:0.98rem; font-weight:800;">🪪 Government ID Details / सरकारी पहचान पत्र</h4>
           <div class="form-row">
             <div class="form-group">
-              <label>Aadhaar Number <span class="hi-lbl">(आधार कार्ड नंबर)</span></label>
-              <input type="text" id="w-aadhaar" class="form-control" placeholder="12 Digit Aadhaar Number" maxlength="14">
+              <label>ID Card Number <span class="hi-lbl">(पहचान पत्र नंबर)</span></label>
+              <input type="text" id="w-aadhaar" class="form-control" placeholder="ID Card Number" maxlength="20">
             </div>
             <div class="form-group">
               <label>PAN Card Number <span class="hi-lbl">(पैन कार्ड नंबर)</span></label>
@@ -518,7 +491,7 @@
                 <th>Mobile <span class="hi-th">मोबाइल</span></th>
                 <th>Trade <span class="hi-th">काम का प्रकार</span></th>
                 <th>Bank & Account <span class="hi-th">बैंक व खाता नंबर</span></th>
-                <th>Aadhaar / PAN <span class="hi-th">आधार व पैन</span></th>
+                <th>ID Details <span class="hi-th">पहचान व पैन</span></th>
                 <th>Action <span class="hi-th">एक्शन</span></th>
               </tr>
             </thead>
@@ -528,7 +501,57 @@
       </div>
     </section>
 
-    <!-- 4. REGULAR WORK LOG -->
+    <!-- 4. GPS & GEOFENCE TELEMETRY VIEW -->
+    <section id="view-telemetry" class="view-section">
+      <div class="ai-geofence-box" id="geofence-banner">
+        <div style="display:flex; align-items:center; gap:0.5rem;">
+          <span id="banner-icon">🛡️</span>
+          <div><strong>Geofence Intelligence:</strong> <span id="geofence-summary-text">Monitoring unique workers...</span></div>
+        </div>
+        <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;">
+          <button class="btn btn-outline btn-sm" onclick="requestNotificationPermission()" style="border-color:var(--ai-purple); color:var(--ai-purple);">🔔 Enable Notifications</button>
+          <label style="font-size:0.8rem;">Radius (KM):</label>
+          <input type="number" id="geofence-radius-input" class="form-control" value="50" style="max-width:70px;" min="1" max="500">
+          <button class="btn btn-primary btn-sm" onclick="saveGeofenceRadius()">Set Permanent</button>
+          <button class="btn btn-success btn-sm" onclick="exportCSVReport()">📥 CSV</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
+          <h3 style="font-size:1rem; color:var(--primary);">🗺️ Live Interactive Map & Route Pinpoint (Luxettipet Workshop)</h3>
+          <span id="live-timer" style="font-size:0.75rem; color:var(--text-secondary); font-weight:700;">Updated: Just now</span>
+        </div>
+        <iframe id="live-map-frame" class="map-frame" src="https://maps.google.com/maps?q=18.9027013,79.2019361&z=15&output=embed"></iframe>
+      </div>
+
+      <div class="card" style="border: 1.5px solid var(--primary);">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 0.75rem;">
+          <h3 style="font-size: 1.05rem; color: var(--primary); margin:0;">📍 Unique Active Workers Live Telemetry</h3>
+          <input type="text" id="telemetry-search-input" class="form-control" placeholder="🔍 Search worker..." onkeyup="filterTelemetryLogs()" style="max-width:220px;">
+        </div>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Worker Name</th>
+                <th>Distance</th>
+                <th>Battery / Network</th>
+                <th>Geofence Status</th>
+                <th>Last Active Time</th>
+                <th>Map</th>
+              </tr>
+            </thead>
+            <tbody id="admin-gps-table-body">
+              <tr><td colspan="6" style="text-align:center; color:#94a3b8;">Loading unique workers GPS data...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. REGULAR WORK LOG -->
     <section id="view-work-entry" class="view-section">
       <div class="card">
         <div class="card-title">
@@ -604,8 +627,6 @@
             </div>
           </div>
 
-          <div id="group-split-preview" style="display:none; margin-bottom:1rem; font-weight:bold; color:var(--success);"></div>
-
           <button type="submit" class="btn btn-primary" id="wl-save-btn">📸 Save Regular Work Log</button>
         </form>
       </div>
@@ -618,7 +639,6 @@
           </div>
         </div>
 
-        <!-- DATE RANGE FILTER FOR REGULAR WORK LOG -->
         <div class="filter-bar">
           <div class="filter-bar-title">📅 Filter Logs By Date Range / तारीख अनुसार देखें:</div>
           <div style="display:flex; gap:0.5rem; flex-wrap:wrap; align-items:center; flex:1;">
@@ -631,7 +651,7 @@
 
         <div class="form-row" style="margin-bottom: 1rem; max-width: 420px;">
           <div class="form-group">
-            <label style="font-size:0.88rem; color:var(--primary); font-weight:800;">🔍 Filter By Worker / कारीगर अनुसार देखें:</label>
+            <label style="font-size:0.88rem; color:var(--primary); font-weight:800;">🔍 Filter By Worker:</label>
             <select id="wl-filter-worker-select" class="form-control" onchange="renderWorkLogs()">
               <option value="ALL">-- All Workers / सभी कारीगर --</option>
             </select>
@@ -686,7 +706,7 @@
       </div>
     </section>
 
-    <!-- 4.2 SPECIAL ORDER ALMARI LOG -->
+    <!-- 5.1 SPECIAL ORDER ALMARI LOG -->
     <section id="view-order-entry" class="view-section">
       <div class="card" style="border-top: 4px solid var(--warning);">
         <div class="card-title">
@@ -756,7 +776,6 @@
           </div>
         </div>
 
-        <!-- DATE RANGE FILTER FOR SPECIAL ORDER ALMARI -->
         <div class="filter-bar">
           <div class="filter-bar-title">📅 Filter Orders By Date Range / तारीख अनुसार देखें:</div>
           <div style="display:flex; gap:0.5rem; flex-wrap:wrap; align-items:center; flex:1;">
@@ -795,7 +814,7 @@
       </div>
     </section>
 
-    <!-- 4.3 DAILY TOTAL PRODUCTION LOG (No Worker Hisaab Link) -->
+    <!-- 5.2 DAILY TOTAL PRODUCTION LOG -->
     <section id="view-daily-production" class="view-section">
       <div class="card" style="border-top: 4px solid var(--success);">
         <div class="card-title">
@@ -806,7 +825,6 @@
           Note: This statement shows total daily item production aggregated strictly by date from Regular Work & Special Order entries without linking to individual worker earnings or payments.
         </p>
 
-        <!-- DATE RANGE FILTER FOR DAILY PRODUCTION -->
         <div class="filter-bar">
           <div class="filter-bar-title">📅 Filter Production By Date Range:</div>
           <div style="display:flex; gap:0.5rem; flex-wrap:wrap; align-items:center; flex:1;">
@@ -856,7 +874,7 @@
       </div>
     </section>
 
-    <!-- 5. PAYMENTS & ADVANCES -->
+    <!-- 6. PAYMENTS & ADVANCES -->
     <section id="view-payments" class="view-section">
       <div class="card">
         <div class="card-title">Record Payment, Advance or Return / भुगतान, एडवांस या पैसा वापसी दर्ज करें</div>
@@ -906,7 +924,7 @@
           <div class="form-group">
             <label>Remarks / Note <span class="hi-lbl">(रिमार्क / नोट)</span></label>
             <div style="display:flex; gap:0.4rem;">
-              <input type="text" id="pay-note" class="form-control" placeholder="e.g. Festival advance, Cash return, GPay">
+              <input type="text" id="pay-note" class="form-control" placeholder="e.g. Festival advance, Cash return">
               <button type="button" class="btn btn-outline btn-sm" onclick="startVoiceRecognition('pay-note')">🎙️ Speak</button>
             </div>
           </div>
@@ -918,7 +936,6 @@
       <div class="card">
         <div class="card-title">Payment & Advance History / दिए गए पैसे व वापसी की हिस्ट्री</div>
 
-        <!-- DATE RANGE FILTER FOR PAYMENTS -->
         <div class="filter-bar">
           <div class="filter-bar-title">📅 Filter Payments By Date Range:</div>
           <div style="display:flex; gap:0.5rem; flex-wrap:wrap; align-items:center; flex:1;">
@@ -948,7 +965,7 @@
       </div>
     </section>
 
-    <!-- 6. TOOL ISSUE LOG VIEW -->
+    <!-- 7. TOOL ISSUE LOG VIEW -->
     <section id="view-tools" class="view-section">
       <div class="card">
         <div class="card-title">🛠️ Tool & Equipment Issue Log / औजार व टूल्स इश्यू खाता</div>
@@ -964,7 +981,7 @@
             </div>
             <div class="form-group">
               <label>Tool / Equipment Name * <span class="hi-lbl">(औजार का नाम)</span></label>
-              <input type="text" id="tool-name" class="form-control" placeholder="e.g. Spray Gun, Welding Helmet, Grinder Machine, Scraper" required>
+              <input type="text" id="tool-name" class="form-control" placeholder="e.g. Spray Gun, Welding Helmet, Grinder" required>
             </div>
           </div>
 
@@ -989,7 +1006,6 @@
       <div class="card">
         <div class="card-title">Issued Tools History / जारी किए गए औजारों की सूची</div>
 
-        <!-- DATE RANGE FILTER FOR TOOLS -->
         <div class="filter-bar">
           <div class="filter-bar-title">📅 Filter Tools By Date Range:</div>
           <div style="display:flex; gap:0.5rem; flex-wrap:wrap; align-items:center; flex:1;">
@@ -1018,7 +1034,7 @@
       </div>
     </section>
 
-    <!-- 7. WORKER PASSBOOK VIEW -->
+    <!-- 8. WORKER PASSBOOK VIEW -->
     <section id="view-ledger" class="view-section">
       <div class="card">
         <div class="card-title">
@@ -1048,7 +1064,6 @@
           </div>
         </div>
 
-        <!-- DATE RANGE FILTER FOR WORKER PASSBOOK -->
         <div class="filter-bar">
           <div class="filter-bar-title">📅 Filter Passbook By Date Range:</div>
           <div style="display:flex; gap:0.5rem; flex-wrap:wrap; align-items:center; flex:1;">
@@ -1288,10 +1303,7 @@
 
   <script>
     function normalizeWorkerName(name) {
-      return String(name || '')
-        .trim()
-        .replace(/\s+/g, ' ')
-        .toLowerCase();
+      return String(name || '').trim().replace(/\s+/g, ' ').toLowerCase();
     }
 
     function isSameWorker(w1, w2) {
@@ -1380,7 +1392,6 @@
 
     let db = null;
     let workersList = [], workLogsList = [], paymentsList = [], toolIssueList = [];
-
     let wageVsAdvChartInstance = null;
     let tradeDistChartInstance = null;
 
@@ -1390,10 +1401,29 @@
     let currentModalFinalPhotoBase64 = '';
     let currentGPSLocationStr = 'Luxettipet Workshop (Default)';
 
+    // GPS Telemetry & Geofence Variables
+    let uniqueWorkersMap = new Map();
+    let allProcessedLogs = [];
+    let allowedRadiusKm = 50;
+    let secondsSinceUpdate = 0;
+    let previousOutOfBoundsCount = 0;
+
+    const SHOP_LAT = 18.9027013;
+    const SHOP_LNG = 79.2019361;
+
     function initFirebase() {
       if (!window.firebase || !window.firebase.firestore) { setTimeout(initFirebase, 300); return; }
       if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
       db = firebase.firestore();
+
+      const savedRadius = localStorage.getItem('sdmw_geofence_radius');
+      if (savedRadius) {
+        allowedRadiusKm = parseFloat(savedRadius);
+        const radInput = document.getElementById('geofence-radius-input');
+        if(radInput) radInput.value = allowedRadiusKm;
+      }
+
+      requestNotificationPermission();
 
       db.collection('wm_workers').onSnapshot(snap => {
         workersList = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
@@ -1417,6 +1447,43 @@
         toolIssueList = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         refreshActiveView();
       }, err => console.error(err));
+
+      db.collection('wm_worker_gps_logs').orderBy('timestamp', 'asc').onSnapshot(snapshot => {
+        const tbody = document.getElementById('admin-gps-table-body');
+        if (!tbody) return;
+        secondsSinceUpdate = 0;
+
+        if (snapshot.empty) {
+          tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#94a3b8;">No GPS telemetry records found yet.</td></tr>`;
+          return;
+        }
+
+        uniqueWorkersMap.clear();
+        allProcessedLogs = [];
+
+        snapshot.forEach(doc => {
+          const log = doc.data();
+          const workerKey = (log.workerName || 'Unknown').trim().toLowerCase();
+          uniqueWorkersMap.set(workerKey, log);
+        });
+
+        allProcessedLogs = Array.from(uniqueWorkersMap.values());
+
+        if (allProcessedLogs.length > 0) {
+          const latest = allProcessedLogs[allProcessedLogs.length - 1];
+          const mapFrame = document.getElementById('live-map-frame');
+          if (mapFrame) {
+            mapFrame.src = `https://maps.google.com/maps?q=${latest.latitude},${latest.longitude}&z=16&output=embed`;
+          }
+        }
+        renderUniqueWorkers();
+      }, err => console.error(err));
+
+      setInterval(() => {
+        secondsSinceUpdate++;
+        const timerElem = document.getElementById('live-timer');
+        if (timerElem) timerElem.innerText = `Updated: ${secondsSinceUpdate}s ago`;
+      }, 1000);
     }
 
     function switchTab(tabId, btn) {
@@ -1560,15 +1627,158 @@
         navigator.geolocation.getCurrentPosition(
           (pos) => {
             currentGPSLocationStr = `Lat: ${pos.coords.latitude.toFixed(4)}, Lng: ${pos.coords.longitude.toFixed(4)}`;
+            const metaBox = document.getElementById('wl-meta-info');
+            if (metaBox) metaBox.value = currentGPSLocationStr;
             showToast('✅ GPS Location captured!', 'success');
           },
           (err) => {
             currentGPSLocationStr = 'Luxettipet Workshop (GPS Offline)';
+            const metaBox = document.getElementById('wl-meta-info');
+            if (metaBox) metaBox.value = currentGPSLocationStr;
             showToast('GPS unavailable. Using default workshop location.', 'info');
           },
-          { timeout: 8000 }
+          { enableHighAccuracy: true, timeout: 20000, maximumAge: 0 }
         );
+      } else {
+        showToast('Geolocation not supported by device', 'danger');
       }
+    }
+
+    // GPS Telemetry Functions & Push Alerts
+    function requestNotificationPermission() {
+      if ("Notification" in window && Notification.permission !== "granted") {
+        Notification.requestPermission().then(permission => {
+          if (permission === "granted") {
+            showToast("✅ Push Notifications Enabled!", "success");
+          }
+        });
+      }
+    }
+
+    function triggerPushNotification(title, bodyText) {
+      if ("Notification" in window && Notification.permission === "granted") {
+        new Notification(title, {
+          body: bodyText,
+          icon: "https://cdn-icons-png.flaticon.com/512/565/565547.png"
+        });
+      }
+    }
+
+    function playBeepSound() {
+      try {
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const oscillator = audioCtx.createOscillator();
+        const gainNode = audioCtx.createGain();
+        oscillator.type = 'sine';
+        oscillator.frequency.setValueAtTime(880, audioCtx.currentTime);
+        gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+        oscillator.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+        oscillator.start();
+        oscillator.stop(audioCtx.currentTime + 0.4);
+      } catch(e) {}
+    }
+
+    function saveGeofenceRadius() {
+      const val = parseFloat(document.getElementById('geofence-radius-input').value);
+      if (isNaN(val) || val <= 0) { showToast('⚠️ Kripya sahi radius value dalein!', 'danger'); return; }
+      allowedRadiusKm = val;
+      localStorage.setItem('sdmw_geofence_radius', allowedRadiusKm);
+      showToast(`✅ Permanent radius limit saved to ${allowedRadiusKm} KM!`, 'success');
+      renderUniqueWorkers();
+    }
+
+    function calculateDistance(lat1, lon1, lat2, lon2) {
+      const R = 6371; 
+      const dLat = (lat2 - lat1) * (Math.PI/180);
+      const dLon = (lon2 - lon1) * (Math.PI/180);
+      const a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(lat1 * (Math.PI/180)) * Math.cos(lat2 * (Math.PI/180)) * Math.sin(dLon/2) * Math.sin(dLon/2); 
+      return R * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a))); 
+    }
+
+    function renderUniqueWorkers(searchQuery = '') {
+      const tbody = document.getElementById('admin-gps-table-body');
+      if (!tbody) return;
+
+      let logsToDisplay = allProcessedLogs;
+      if (searchQuery) {
+        logsToDisplay = allProcessedLogs.filter(log => (log.workerName || '').toLowerCase().includes(searchQuery));
+      }
+
+      if (logsToDisplay.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#94a3b8;">No matching worker found.</td></tr>`;
+        return;
+      }
+
+      let outOfBoundsCount = 0;
+      let html = '';
+
+      logsToDisplay.forEach(log => {
+        const distNum = calculateDistance(SHOP_LAT, SHOP_LNG, log.latitude, log.longitude);
+        const isFar = distNum > allowedRadiusKm;
+        if (isFar) outOfBoundsCount++;
+
+        const statusBadge = isFar 
+          ? `<span style="background:#fee2e2; color:#dc2626; padding:0.2rem 0.5rem; border-radius:999px; font-weight:700; font-size:0.72rem;">⚠️ Out of Bounds</span>`
+          : `<span style="background:#ecfdf5; color:#059669; padding:0.2rem 0.5rem; border-radius:999px; font-weight:700; font-size:0.72rem;">✅ Safe Zone</span>`;
+
+        const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${log.latitude},${log.longitude}`;
+
+        html += `
+          <tr>
+            <td><b>${log.workerName || 'Unknown'}</b></td>
+            <td><b>${distNum.toFixed(2)} KM</b></td>
+            <td>🔋 ${log.battery || 'N/A'}<br>📶 ${log.network || 'Online'}</td>
+            <td>${statusBadge}</td>
+            <td style="font-size:0.78rem; color:var(--text-secondary);">${new Date(log.timestamp).toLocaleString()}</td>
+            <td><a href="${mapsUrl}" target="_blank" class="btn btn-outline btn-sm">📍 Map</a></td>
+          </tr>`;
+      });
+      tbody.innerHTML = html;
+
+      const summaryEl = document.getElementById('geofence-summary-text');
+      const bannerEl = document.getElementById('geofence-banner');
+      const bannerIcon = document.getElementById('banner-icon');
+
+      if (summaryEl) {
+        if (outOfBoundsCount > 0) {
+          summaryEl.innerHTML = `<span style="color:var(--danger)">⚠️ ALERT: ${outOfBoundsCount} unique worker(s) geofence limit cross kar gaye hain!</span>`;
+          if(bannerEl) bannerEl.classList.add('alert-flash');
+          if(bannerIcon) bannerIcon.textContent = "🚨";
+
+          if (outOfBoundsCount > previousOutOfBoundsCount) {
+            playBeepSound();
+            triggerPushNotification("🚨 Geofence Breach Alert!", `${outOfBoundsCount} worker(s) have crossed the ${allowedRadiusKm} KM boundary!`);
+          }
+        } else {
+          summaryEl.innerHTML = `<span style="color:var(--success)">Sabhi unique workers ${allowedRadiusKm} KM safe zone ke andar hain.</span>`;
+          if(bannerEl) bannerEl.classList.remove('alert-flash');
+          if(bannerIcon) bannerIcon.textContent = "🛡️";
+        }
+        previousOutOfBoundsCount = outOfBoundsCount;
+      }
+    }
+
+    function filterTelemetryLogs() {
+      const query = document.getElementById('telemetry-search-input').value.toLowerCase();
+      renderUniqueWorkers(query);
+    }
+
+    function exportCSVReport() {
+      if (allProcessedLogs.length === 0) { showToast('⚠️ No data to export!', 'danger'); return; }
+      let csvContent = "data:text/csv;charset=utf-8,Worker Name,Distance (KM),Battery,Network,Timestamp\n";
+      allProcessedLogs.forEach(row => {
+        const dist = calculateDistance(SHOP_LAT, SHOP_LNG, row.latitude, row.longitude).toFixed(2);
+        csvContent += `"${row.workerName || 'Unknown'}","${dist}","${row.battery || 'N/A'}","${row.network || 'N/A'}","${row.timestamp}"\n`;
+      });
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", "SriDevi_Unique_Workers_Report.csv");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      showToast('✅ Report downloaded successfully!', 'success');
     }
 
     async function previewWorkPhoto(input, previewElemId) {
@@ -1623,8 +1833,8 @@
         riskContainer.innerHTML = `<div style="color:var(--success); font-size:0.88rem; padding:0.5rem 0;">✅ <b>All clear!</b> No worker has taken extra advance beyond work done.</div>`;
       } else {
         riskContainer.innerHTML = advanceRiskWorkers.map(w => `
-          <div class="ai-insight-item" style="border-left-color: var(--danger); margin-bottom: 0.5rem; padding: 0.75rem; background: var(--bg-surface); border-radius: 8px;">
-            <div style="flex:1;">
+          <div style="border-left:4px solid var(--danger); margin-bottom: 0.5rem; padding: 0.75rem; background: var(--bg-surface); border-radius: 8px;">
+            <div>
               <div style="display:flex; justify-content:space-between; align-items:center;">
                 <b style="color:var(--danger); font-size:0.95rem;">⚠️ ${w.name} ${w.nameHi ? '(' + w.nameHi + ')' : ''}</b>
                 <span class="badge badge-danger">Extra Adv: ₹${w.advExtra.toFixed(2)}</span>
@@ -1647,14 +1857,14 @@
       const projectedMonthlyWage = avgDailyWageCost * 26;
 
       forecastContainer.innerHTML = `
-        <div class="ai-insight-item" style="border-left-color: var(--ai-purple); margin-bottom: 0.5rem; padding: 0.75rem; background: var(--bg-surface); border-radius: 8px;">
-          <div style="flex:1;">
+        <div style="border-left:4px solid var(--ai-purple); margin-bottom: 0.5rem; padding: 0.75rem; background: var(--bg-surface); border-radius: 8px;">
+          <div>
             <b>🗓️ 7-Day Wage Payout Projection</b>
             <div style="font-size:1.1rem; font-weight:800; color:var(--primary); margin:0.25rem 0;">₹${projectedWeeklyWage.toLocaleString('en-IN', {minimumFractionDigits:2})}</div>
           </div>
         </div>
-        <div class="ai-insight-item" style="border-left-color: var(--success); padding: 0.75rem; background: var(--bg-surface); border-radius: 8px;">
-          <div style="flex:1;">
+        <div style="border-left:4px solid var(--success); padding: 0.75rem; background: var(--bg-surface); border-radius: 8px;">
+          <div>
             <b>📊 Monthly Production Wage Demand (26 Days)</b>
             <div style="font-size:1.1rem; font-weight:800; color:var(--success); margin:0.25rem 0;">₹${projectedMonthlyWage.toLocaleString('en-IN', {minimumFractionDigits:2})}</div>
           </div>
@@ -1684,7 +1894,7 @@
         if (idx === 0) rankBadge = `<span class="badge badge-warning" style="background:#fef3c7; color:#b45309;">🥇 Top Performer</span>`;
 
         html += `
-          <div class="ai-insight-item" style="border-left-color: var(--primary); background: var(--bg-surface); margin-bottom: 0.5rem; padding: 0.75rem; border-radius: 8px;">
+          <div style="border-left:4px solid var(--primary); background: var(--bg-surface); margin-bottom: 0.5rem; padding: 0.75rem; border-radius: 8px;">
             <div style="display:flex; justify-content:space-between; align-items:center;">
               <b>${rankBadge} ${w.name} ${w.nameHi ? '(' + w.nameHi + ')' : ''}</b>
               <span style="font-weight:800; color:var(--ai-purple);">Score: ${w.score}/100</span>
@@ -1701,8 +1911,6 @@
     function quickWorkerQuery(type) {
       if (type === 'advance-risk') runWorkerAIQuery('show advance risk workers');
       if (type === 'payout-forecast') runWorkerAIQuery('show wage payout forecast');
-      if (type === 'surjit') runWorkerAIQuery('surjit hisaab');
-      if (type === 'pannalal') runWorkerAIQuery('pannalal hisaab');
       if (type === 'summary') runWorkerAIQuery('overall workshop wage summary');
     }
 
@@ -1936,7 +2144,7 @@
       tbody.innerHTML = '';
       workersList.forEach(w => {
         const bankInfo = w.accountNo ? `<b>${w.bankName || 'Bank'}</b><br>A/C: ${w.accountNo}<br>IFSC: ${w.ifsc || '-'}` : '<span style="color:var(--text-muted)">No Bank Info</span>';
-        const kycInfo = (w.aadhaar || w.pan) ? `Aadhaar: [Aadhaar Redacted]<br>PAN: ${w.pan || '-'}` : '<span style="color:var(--text-muted)">No ID</span>';
+        const kycInfo = (w.aadhaar || w.pan) ? `ID: ${w.aadhaar || '-'}<br>PAN: ${w.pan || '-'}` : '<span style="color:var(--text-muted)">No ID</span>';
 
         tbody.innerHTML += `
           <tr>
@@ -2338,7 +2546,6 @@
       tbody.innerHTML = '';
 
       const productionMap = {};
-
       const filteredWorkLogs = workLogsList.filter(log => isDateInRange(log.date, 'dp-from-date', 'dp-to-date'));
 
       filteredWorkLogs.forEach(log => {
@@ -2346,7 +2553,6 @@
         let rawTask = (log.task || 'General Production').replace(/ \(Group Share of \d+\)/, '');
         rawTask = rawTask.replace(/^(📦 SPECIAL ORDER:\s*)+/i, '📦 SPECIAL ORDER: ');
         const entryCategory = log.isOrderItem ? 'Special Order Almari' : 'Regular Work Log';
-        
         const signature = log.time ? `${dateKey}_${rawTask}_${log.time}` : `${dateKey}_${rawTask}_${entryCategory}`;
 
         if (!productionMap[signature]) {
@@ -2495,7 +2701,7 @@
 
     function viewWorkerPassbook(workerId) {
       document.getElementById('passbook-worker-select').value = workerId;
-      switchTab('ledger', document.querySelectorAll('.tab-btn')[8]);
+      switchTab('ledger', document.querySelectorAll('.tab-btn')[9]);
       renderWorkerPassbook();
     }
 
