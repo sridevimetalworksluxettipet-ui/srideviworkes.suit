@@ -10,6 +10,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
+  <!-- LEAFLET.JS CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+
   <!-- FIREBASE WEB SDK (v8) -->
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
@@ -22,6 +25,9 @@
 
   <!-- CHART.JS VISUAL ANALYTICS LIBRARY -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- LEAFLET.JS JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 
   <style>
     :root {
@@ -170,7 +176,9 @@
     .ai-geofence-box { background: var(--ai-purple-light); border: 1.5px solid rgba(139, 92, 246, 0.3); border-radius: var(--radius-md); padding: 1rem; margin-bottom: 1.25rem; font-size: 0.88rem; font-weight: 600; color: var(--ai-purple); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; transition: all 0.3s ease; }
     .alert-flash { animation: flashAlarm 1s infinite alternate; }
     @keyframes flashAlarm { from { background-color: rgba(239, 68, 68, 0.1); border-color: var(--danger); } to { background-color: rgba(239, 68, 68, 0.3); border-color: var(--danger); } }
-    .map-frame { width: 100%; height: 350px; border: none; border-radius: var(--radius-md); margin-top: 0.5rem; }
+    
+    /* Satellite Map Box */
+    #leaflet-multi-map { width: 100%; height: 480px; border-radius: var(--radius-md); margin-top: 0.5rem; z-index: 1; }
 
     .worker-checkbox-grid {
       display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
@@ -270,9 +278,9 @@
       👷 Worker Master & KYC
       <span class="hi">वर्कर प्रोफाइल व बैंक खाता</span>
     </button>
-    <button class="tab-btn" onclick="switchTab('telemetry', this)">
-      📍 GPS & Geofence Live
-      <span class="hi">लाइव जीपीएस व जियो-फेंसिंग</span>
+    <button class="tab-btn ai-tab active" onclick="switchTab('master-gps-center', this); setTimeout(invalidateLeafletMap, 200);" style="color:#0284c7; font-weight:800;">
+      🛰️ Satellite GPS & Multi-Worker Pins
+      <span class="hi">सैटेलाइट मैप व सभी वर्कर्स के लाइव पिंस</span>
     </button>
     <button class="tab-btn" onclick="switchTab('work-entry', this)">
       ⚙️ Regular Work Log
@@ -501,34 +509,97 @@
       </div>
     </section>
 
-    <!-- 4. GPS & GEOFENCE TELEMETRY VIEW -->
-    <section id="view-telemetry" class="view-section">
+    <!-- 4. MASTER SATELLITE GPS & MULTI-WORKER MAP CENTER -->
+    <section id="view-master-gps-center" class="view-section active">
       <div class="ai-geofence-box" id="geofence-banner">
         <div style="display:flex; align-items:center; gap:0.5rem;">
           <span id="banner-icon">🛡️</span>
-          <div><strong>Geofence Intelligence:</strong> <span id="geofence-summary-text">Monitoring unique workers...</span></div>
+          <div><strong>Satellite Multi-Worker Intelligence:</strong> <span id="geofence-summary-text">Tracking all active workers...</span></div>
         </div>
         <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;">
-          <button class="btn btn-outline btn-sm" onclick="requestNotificationPermission()" style="border-color:var(--ai-purple); color:var(--ai-purple);">🔔 Enable Notifications</button>
-          <label style="font-size:0.8rem;">Radius (KM):</label>
+          <button class="btn btn-outline btn-sm" onclick="requestNotificationPermission()" style="border-color:var(--ai-purple); color:var(--ai-purple);">🔔 Notifications</button>
+          <label style="font-size:0.80rem;">Radius (KM):</label>
           <input type="number" id="geofence-radius-input" class="form-control" value="50" style="max-width:70px;" min="1" max="500">
-          <button class="btn btn-primary btn-sm" onclick="saveGeofenceRadius()">Set Permanent</button>
+          <button class="btn btn-primary btn-sm" onclick="saveGeofenceRadius()">Set</button>
           <button class="btn btn-success btn-sm" onclick="exportCSVReport()">📥 CSV</button>
         </div>
       </div>
 
-      <div class="card">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
-          <h3 style="font-size:1rem; color:var(--primary);">🗺️ Live Interactive Map & Route Pinpoint (Luxettipet Workshop)</h3>
+      <!-- SATELLITE MAP WITH WORKER PINS -->
+      <div class="card" style="border: 2px solid var(--primary);">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem; flex-wrap:wrap; gap:0.5rem;">
+          <h3 style="font-size:1.05rem; color:var(--primary);">🛰️ Satellite Multi-Worker Map (Surjit, Ganga Singh, Nitish, Pannalal & All)</h3>
           <span id="live-timer" style="font-size:0.75rem; color:var(--text-secondary); font-weight:700;">Updated: Just now</span>
         </div>
-        <iframe id="live-map-frame" class="map-frame" src="https://maps.google.com/maps?q=18.9027013,79.2019361&z=15&output=embed"></iframe>
+        <p style="font-size:0.82rem; color:var(--text-secondary); margin-bottom:0.75rem;">
+          Yahan Esri World Imagery Satellite View par sabhi active workers ke alag-alag live pins unke naam ke sath dikh rahe hain.
+        </p>
+        <div id="leaflet-multi-map"></div>
       </div>
 
+      <!-- ADVANCED GEOFENCE & DWELL TIME RULES -->
+      <div class="card" style="border-top: 4px solid #0284c7;">
+        <div class="card-title">
+          <span style="color:#0284c7;">🛰️ Advanced Dwell-Time & Multi-Constellation AI Geofencing</span>
+          <span class="badge badge-primary">Anti-Spoofing Active</span>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Dwell Time Threshold (Seconds) <span class="hi-lbl">(बाहर रहने पर अलर्ट सेकंड)</span></label>
+            <input type="number" id="adv-dwell-seconds" class="form-control" value="30" min="5" max="300">
+          </div>
+          <div class="form-group" style="display:flex; align-items:flex-end;">
+            <button type="button" class="btn btn-primary" onclick="saveAdvancedGeofenceSettings()">💾 Save Geofence Rules</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- BORDER EDITOR (MANUAL + GPS) -->
+      <div class="card" style="border-top: 4px solid var(--primary);">
+        <div class="card-title">
+          <span>🗺️ Custom Factory Border & Geofence Polygon Editor</span>
+          <span class="badge badge-primary">Manual & GPS Boundary</span>
+        </div>
+        <p style="color:var(--text-secondary); font-size:0.85rem; margin-bottom:1rem;">
+          Factory ke corners ke coordinates yahan save karein (Live GPS se ya Google Maps से copy karke direct paste karein).
+        </p>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Border Point Name / Corner <span class="hi-lbl">(जैसे: Main Gate, Back Corner)</span></label>
+            <input type="text" id="border-point-name" class="form-control" placeholder="e.g. North Gate Corner">
+          </div>
+          <div class="form-group">
+            <label>Coordinates (Lat, Lng) <span class="hi-lbl">(Auto GPS या Manual Paste)</span></label>
+            <input type="text" id="border-point-coords" class="form-control" placeholder="e.g. 18.902701, 79.201936">
+          </div>
+          <div class="form-group" style="display:flex; align-items:flex-end; gap:0.5rem; flex-wrap:wrap;">
+            <button type="button" class="btn btn-outline" onclick="captureBorderSpot()">📍 Capture GPS</button>
+            <button type="button" class="btn btn-primary" onclick="saveBorderPointToCloud()">💾 Save Point</button>
+          </div>
+        </div>
+
+        <div class="table-container" style="margin-top: 1rem;">
+          <table>
+            <thead>
+              <tr>
+                <th>Corner / Point Name <span class="hi-th">पॉइंट का नाम</span></th>
+                <th>Latitude & Longitude <span class="hi-th">कोऑर्डिनेट्स</span></th>
+                <th>Action <span class="hi-th">एक्शन</span></th>
+              </tr>
+            </thead>
+            <tbody id="custom-border-table-body">
+              <tr><td colspan="3" style="text-align:center; color:var(--text-muted);">No custom border points saved yet. Use above form to add.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- WORKERS LIVE TELEMETRY TABLE -->
       <div class="card" style="border: 1.5px solid var(--primary);">
         <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 0.75rem;">
-          <h3 style="font-size: 1.05rem; color: var(--primary); margin:0;">📍 Unique Active Workers Live Telemetry</h3>
-          <input type="text" id="telemetry-search-input" class="form-control" placeholder="🔍 Search worker..." onkeyup="filterTelemetryLogs()" style="max-width:220px;">
+          <h3 style="font-size: 1.05rem; color: var(--primary); margin:0;">📍 All Active Workers Telemetry List</h3>
+          <input type="text" id="telemetry-search-input" class="form-control" placeholder="🔍 Search worker (Surjit, Ganga...)" onkeyup="filterTelemetryLogs()" style="max-width:240px;">
         </div>
 
         <div class="table-container">
@@ -1294,12 +1365,15 @@
       </div>
       <div class="modal-footer" style="justify-content:space-between;">
         <button class="btn btn-outline btn-sm" onclick="closeModal('id-card-modal')">Close</button>
-        <button class="btn btn-primary btn-sm" onclick="printIDCard()">🖨️ Print ID Card</button>
+        <button class="btn btn-primary btn-sm" onclick="printIDCard()">🪨 Print ID Card</button>
       </div>
     </div>
   </div>
 
   <div id="toast-container" class="toast-container"></div>
+
+  <!-- LEAFLET.JS JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 
   <script>
     function normalizeWorkerName(name) {
@@ -1401,12 +1475,15 @@
     let currentModalFinalPhotoBase64 = '';
     let currentGPSLocationStr = 'Luxettipet Workshop (Default)';
 
-    // GPS Telemetry & Geofence Variables
+    // GPS Telemetry & Satellite Multi-Worker Map Variables
     let uniqueWorkersMap = new Map();
     let allProcessedLogs = [];
     let allowedRadiusKm = 50;
     let secondsSinceUpdate = 0;
     let previousOutOfBoundsCount = 0;
+
+    let leafletMultiMap = null;
+    let workerMarkersLayer = null;
 
     const SHOP_LAT = 18.9027013;
     const SHOP_LNG = 79.2019361;
@@ -1455,6 +1532,7 @@
 
         if (snapshot.empty) {
           tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#94a3b8;">No GPS telemetry records found yet.</td></tr>`;
+          updateLeafletMultiMap([]);
           return;
         }
 
@@ -1468,15 +1546,8 @@
         });
 
         allProcessedLogs = Array.from(uniqueWorkersMap.values());
-
-        if (allProcessedLogs.length > 0) {
-          const latest = allProcessedLogs[allProcessedLogs.length - 1];
-          const mapFrame = document.getElementById('live-map-frame');
-          if (mapFrame) {
-            mapFrame.src = `https://maps.google.com/maps?q=${latest.latitude},${latest.longitude}&z=16&output=embed`;
-          }
-        }
         renderUniqueWorkers();
+        updateLeafletMultiMap(allProcessedLogs);
       }, err => console.error(err));
 
       setInterval(() => {
@@ -1486,6 +1557,69 @@
       }, 1000);
     }
 
+    // Leaflet Satellite Multi-Worker Map Setup (Esri World Imagery + Firebase Live Marker Pins)
+    function initLeafletMultiMap() {
+      if (leafletMultiMap) return;
+
+      leafletMultiMap = L.map('leaflet-multi-map', { maxZoom: 19 }).setView([SHOP_LAT, SHOP_LNG], 17);
+
+      // Esri Satellite Layer (True Aerial Imagery)
+      L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+        maxZoom: 19,
+        attribution: 'Tiles &copy; Esri'
+      }).addTo(leafletMultiMap);
+
+      workerMarkersLayer = L.layerGroup().addTo(leafletMultiMap);
+
+      // Add Workshop Center Marker
+      L.marker([SHOP_LAT, SHOP_LNG], {
+        icon: L.divIcon({
+          className: 'custom-shop-pin',
+          html: '<div style="background:#4f46e5; color:white; padding:4px 8px; border-radius:6px; font-weight:800; font-size:11px; white-space:nowrap; box-shadow:0 4px 10px rgba(0,0,0,0.6);">🏭 Sri Devi Metal Works</div>',
+          iconSize: [120, 30],
+          iconAnchor: [60, 15]
+        })
+      }).addTo(leafletMultiMap);
+
+      if (allProcessedLogs.length > 0) {
+        updateLeafletMultiMap(allProcessedLogs);
+      }
+    }
+
+    function invalidateLeafletMap() {
+      setTimeout(() => {
+        if (!leafletMultiMap) {
+          initLeafletMultiMap();
+        } else {
+          leafletMultiMap.invalidateSize();
+        }
+      }, 200);
+    }
+
+    function updateLeafletMultiMap(logs) {
+      if (!leafletMultiMap || !workerMarkersLayer) return;
+      workerMarkersLayer.clearLayers();
+
+      logs.forEach(log => {
+        const lat = log.latitude;
+        const lng = log.longitude;
+        const wName = log.workerName || 'Active Worker';
+        const timeStr = new Date(log.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+        // Har worker (Surjit, Ganga Singh, Nitish, Pannalal) ke liye alag named pin marker
+        const workerIcon = L.divIcon({
+          className: 'custom-worker-pin',
+          html: `<div style="background:#ef4444; color:white; padding:4px 8px; border-radius:6px; font-weight:800; font-size:11px; white-space:nowrap; box-shadow:0 4px 12px rgba(239,68,68,0.7); border:2px solid white;">👤 ${wName} (${timeStr})</div>`,
+          iconSize: [140, 30],
+          iconAnchor: [70, 15]
+        });
+
+        const marker = L.marker([lat, lng], { icon: workerIcon });
+        marker.bindPopup(`<b>Worker:</b> ${wName}<br><b>Time:</b> ${new Date(log.timestamp).toLocaleString()}<br><b>Battery:</b> ${log.battery || 'N/A'}`);
+        workerMarkersLayer.addLayer(marker);
+      });
+    }
+
     function switchTab(tabId, btn) {
       document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active'));
       document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -1493,6 +1627,9 @@
       document.getElementById(`view-${tabId}`).classList.add('active');
       btn.classList.add('active');
       refreshActiveView();
+      if (tabId === 'master-gps-center') {
+        invalidateLeafletMap();
+      }
     }
 
     function openPhotoLightbox(src, title) {
@@ -1644,7 +1781,6 @@
       }
     }
 
-    // GPS Telemetry Functions & Push Alerts
     function requestNotificationPermission() {
       if ("Notification" in window && Notification.permission !== "granted") {
         Notification.requestPermission().then(permission => {
@@ -1726,7 +1862,7 @@
 
         html += `
           <tr>
-            <td><b>${log.workerName || 'Unknown'}</b></td>
+            <td><b>👤 ${log.workerName || 'Unknown'}</b></td>
             <td><b>${distNum.toFixed(2)} KM</b></td>
             <td>🔋 ${log.battery || 'N/A'}<br>📶 ${log.network || 'Online'}</td>
             <td>${statusBadge}</td>
@@ -1751,7 +1887,7 @@
             triggerPushNotification("🚨 Geofence Breach Alert!", `${outOfBoundsCount} worker(s) have crossed the ${allowedRadiusKm} KM boundary!`);
           }
         } else {
-          summaryEl.innerHTML = `<span style="color:var(--success)">Sabhi unique workers ${allowedRadiusKm} KM safe zone ke andar hain.</span>`;
+          summaryEl.innerHTML = `<span style="color:var(--success)">Sabhi active workers ${allowedRadiusKm} KM safe zone ke andar hain.</span>`;
           if(bannerEl) bannerEl.classList.remove('alert-flash');
           if(bannerIcon) bannerIcon.textContent = "🛡️";
         }
@@ -1803,156 +1939,6 @@
           showToast('❌ Image processing failed', 'danger');
         }
       }
-    }
-
-    function generateAIWorkerInsights() {
-      const riskContainer = document.getElementById('ai-risk-list');
-      const forecastContainer = document.getElementById('ai-forecast-list');
-      const badge = document.getElementById('ai-risk-count-badge');
-      if(!riskContainer || !forecastContainer) return;
-
-      const advanceRiskWorkers = [];
-
-      workersList.forEach(w => {
-        const earned = workLogsList.filter(l => isSameWorker(l, w) && (l.status || 'Completed') === 'Completed').reduce((a, b) => a + (Number(b.totalEarned) || 0), 0);
-        const paid = paymentsList.filter(p => isSameWorker(p, w)).reduce((a, b) => {
-          const amt = Number(b.amount) || 0;
-          return (b.type === 'Advance Return' || b.type === 'Credit / Extra Income') ? a - amt : a + amt;
-        }, 0);
-        const net = earned - paid;
-
-        if (net < 0) {
-          const advExtra = Math.abs(net);
-          advanceRiskWorkers.push({ ...w, earned, paid, advExtra });
-        }
-      });
-
-      badge.textContent = `${advanceRiskWorkers.length} Workers with Extra Advance`;
-
-      if (advanceRiskWorkers.length === 0) {
-        riskContainer.innerHTML = `<div style="color:var(--success); font-size:0.88rem; padding:0.5rem 0;">✅ <b>All clear!</b> No worker has taken extra advance beyond work done.</div>`;
-      } else {
-        riskContainer.innerHTML = advanceRiskWorkers.map(w => `
-          <div style="border-left:4px solid var(--danger); margin-bottom: 0.5rem; padding: 0.75rem; background: var(--bg-surface); border-radius: 8px;">
-            <div>
-              <div style="display:flex; justify-content:space-between; align-items:center;">
-                <b style="color:var(--danger); font-size:0.95rem;">⚠️ ${w.name} ${w.nameHi ? '(' + w.nameHi + ')' : ''}</b>
-                <span class="badge badge-danger">Extra Adv: ₹${w.advExtra.toFixed(2)}</span>
-              </div>
-              <div style="font-size:0.82rem; margin-top:0.3rem; color:var(--text-secondary);">
-                Work Done: <b>₹${w.earned.toFixed(2)}</b> | Total Paid: <b>₹${w.paid.toFixed(2)}</b>
-              </div>
-            </div>
-          </div>
-        `).join('');
-      }
-
-      let totalPastWork = 0;
-      workLogsList.filter(l => (l.status || 'Completed') === 'Completed').forEach(w => totalPastWork += (Number(w.totalEarned) || 0));
-
-      const logDates = [...new Set(workLogsList.map(w => w.date))];
-      const activeDays = Math.max(logDates.length, 1);
-      const avgDailyWageCost = totalPastWork / activeDays;
-      const projectedWeeklyWage = avgDailyWageCost * 7;
-      const projectedMonthlyWage = avgDailyWageCost * 26;
-
-      forecastContainer.innerHTML = `
-        <div style="border-left:4px solid var(--ai-purple); margin-bottom: 0.5rem; padding: 0.75rem; background: var(--bg-surface); border-radius: 8px;">
-          <div>
-            <b>🗓️ 7-Day Wage Payout Projection</b>
-            <div style="font-size:1.1rem; font-weight:800; color:var(--primary); margin:0.25rem 0;">₹${projectedWeeklyWage.toLocaleString('en-IN', {minimumFractionDigits:2})}</div>
-          </div>
-        </div>
-        <div style="border-left:4px solid var(--success); padding: 0.75rem; background: var(--bg-surface); border-radius: 8px;">
-          <div>
-            <b>📊 Monthly Production Wage Demand (26 Days)</b>
-            <div style="font-size:1.1rem; font-weight:800; color:var(--success); margin:0.25rem 0;">₹${projectedMonthlyWage.toLocaleString('en-IN', {minimumFractionDigits:2})}</div>
-          </div>
-        </div>
-      `;
-
-      renderProductivityScoreLeaderboard();
-    }
-
-    function renderProductivityScoreLeaderboard() {
-      const container = document.getElementById('productivity-leaderboard-container');
-      if (!container) return;
-
-      const workerStats = workersList.map(w => {
-        const logs = workLogsList.filter(l => isSameWorker(l, w) && (l.status || 'Completed') === 'Completed');
-        const totalQty = logs.reduce((a, b) => a + (Number(b.qty) || 0), 0);
-        const totalEarned = logs.reduce((a, b) => a + (Number(b.totalEarned) || 0), 0);
-        const score = Math.min(100, Math.round((totalEarned / 400) + (totalQty * 1.5)));
-        return { ...w, totalQty, totalEarned, score };
-      });
-
-      workerStats.sort((a, b) => b.score - a.score);
-
-      let html = '';
-      workerStats.forEach((w, idx) => {
-        let rankBadge = `<span class="badge badge-secondary">Rank #${idx + 1}</span>`;
-        if (idx === 0) rankBadge = `<span class="badge badge-warning" style="background:#fef3c7; color:#b45309;">🥇 Top Performer</span>`;
-
-        html += `
-          <div style="border-left:4px solid var(--primary); background: var(--bg-surface); margin-bottom: 0.5rem; padding: 0.75rem; border-radius: 8px;">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-              <b>${rankBadge} ${w.name} ${w.nameHi ? '(' + w.nameHi + ')' : ''}</b>
-              <span style="font-weight:800; color:var(--ai-purple);">Score: ${w.score}/100</span>
-            </div>
-            <div style="font-size:0.8rem; color:var(--text-secondary); margin-top:0.2rem;">
-              Trade: ${w.trade || 'General'} | Completed: ${w.totalQty} Pcs | Earned: ₹${w.totalEarned.toFixed(2)}
-            </div>
-          </div>
-        `;
-      });
-      container.innerHTML = html || '<div style="color:var(--text-muted); font-size:0.85rem;">No productivity logs available.</div>';
-    }
-
-    function quickWorkerQuery(type) {
-      if (type === 'advance-risk') runWorkerAIQuery('show advance risk workers');
-      if (type === 'payout-forecast') runWorkerAIQuery('show wage payout forecast');
-      if (type === 'summary') runWorkerAIQuery('overall workshop wage summary');
-    }
-
-    function runWorkerAIQuery(customQuery = null) {
-      const q = (customQuery || document.getElementById('ai-worker-query').value).toLowerCase().trim();
-      const respBox = document.getElementById('ai-worker-response');
-      if(!respBox) return;
-      respBox.innerHTML = `<span style="color:var(--ai-purple); font-weight:700;">🤖 AI Hisaab Engine Analyzing Ledger...</span>`;
-
-      setTimeout(() => {
-        let resp = "";
-        const matchedWorker = workersList.find(w => q.includes(normalizeWorkerName(w.name)) || (w.nameHi && q.includes(w.nameHi.toLowerCase())));
-
-        if (matchedWorker) {
-          const wEarned = workLogsList.filter(l => isSameWorker(l, matchedWorker) && (l.status || 'Completed') === 'Completed').reduce((sum, item) => sum + (Number(item.totalEarned) || 0), 0);
-          const wPaid = paymentsList.filter(p => isSameWorker(p, matchedWorker)).reduce((sum, item) => {
-            return (item.type === 'Advance Return' || item.type === 'Credit / Extra Income') ? sum - (Number(item.amount) || 0) : sum + (Number(item.amount) || 0);
-          }, 0);
-          const net = wEarned - wPaid;
-
-          resp = `<b>${matchedWorker.name} (${matchedWorker.nameHi || matchedWorker.trade}) Hisaab:</b><br>` +
-                 `• Total Work Done (कमाई): <b>₹${wEarned.toFixed(2)}</b><br>` +
-                 `• Total Net Paid (दिया): <b>₹${wPaid.toFixed(2)}</b><br>` +
-                 `• Net Balance: <span style="color:${net >= 0 ? 'var(--success)' : 'var(--danger)'}; font-weight:800;">₹${Math.abs(net).toFixed(2)} ${net >= 0 ? '(Payable Due)' : '(Advance Extra)'}</span>`;
-        } else {
-          let totalWork = 0, totalPaid = 0;
-          workLogsList.filter(l => (l.status || 'Completed') === 'Completed').forEach(w => totalWork += (Number(w.totalEarned) || 0));
-          paymentsList.forEach(p => {
-            const amt = Number(p.amount) || 0;
-            if (p.type === 'Advance Return' || p.type === 'Credit / Extra Income') totalPaid -= amt;
-            else totalPaid += amt;
-          });
-          const netTotal = totalWork - totalPaid;
-
-          resp = `<b>Workshop Hisaab Summary:</b><br>` +
-                 `• Total Active Workers: <b>${workersList.length}</b><br>` +
-                 `• Total Work Created (कमाई): <b>₹${totalWork.toLocaleString('en-IN', {minimumFractionDigits:2})}</b><br>` +
-                 `• Total Net Paid (दिया): <b>₹${totalPaid.toLocaleString('en-IN', {minimumFractionDigits:2})}</b><br>` +
-                 `• Overall Balance: <b>₹${Math.abs(netTotal).toLocaleString('en-IN', {minimumFractionDigits:2})} ${netTotal < 0 ? '(Adv Extra)' : '(Payable Extra)'}</b>`;
-        }
-        respBox.innerHTML = resp;
-      }, 200);
     }
 
     function openWorkerIDCard(workerId) {
@@ -2816,7 +2802,6 @@
       renderToolTable();
       renderDashboardSummary();
       renderWorkerPassbook();
-      generateAIWorkerInsights();
     }
 
     function openModal(id) { document.getElementById(id).classList.add('active'); }
@@ -2832,12 +2817,101 @@
       setTimeout(() => toast.remove(), 2500);
     }
 
+    let dwellThresholdSeconds = 30;
+
+    function saveAdvancedGeofenceSettings() {
+      const val = parseInt(document.getElementById('adv-dwell-seconds').value);
+      if (!isNaN(val) && val > 0) {
+        dwellThresholdSeconds = val;
+        localStorage.setItem('sdmw_dwell_threshold', dwellThresholdSeconds);
+        showToast(`✅ Dwell-time filter set to ${dwellThresholdSeconds} seconds!`, 'success');
+      } else {
+        showToast('⚠️ Kripya sahi second value dalein!', 'danger');
+      }
+    }
+
+    let savedBorderPoints = JSON.parse(localStorage.getItem('sdmw_custom_borders') || '[]');
+
+    function captureBorderSpot() {
+      if (navigator.geolocation) {
+        showToast('📍 Capturing factory border coordinate...', 'info');
+        navigator.geolocation.getCurrentPosition(
+          (pos) => {
+            const lat = pos.coords.latitude.toFixed(6);
+            const lng = pos.coords.longitude.toFixed(6);
+            document.getElementById('border-point-coords').value = `${lat}, ${lng}`;
+            showToast('✅ Coordinate captured successfully!', 'success');
+          },
+          (err) => {
+            document.getElementById('border-point-coords').value = `${SHOP_LAT}, ${SHOP_LNG}`;
+            showToast('⚠️ GPS offline. Used default workshop center.', 'warning');
+          },
+          { enableHighAccuracy: true, timeout: 15000 }
+        );
+      } else {
+        showToast('Geolocation is not supported by your browser', 'danger');
+      }
+    }
+
+    function saveBorderPointToCloud() {
+      const name = document.getElementById('border-point-name').value.trim();
+      const coords = document.getElementById('border-point-coords').value.trim();
+
+      if (!name || !coords) {
+        showToast('⚠️ Kripya point ka naam aur coordinates dalein!', 'danger');
+        return;
+      }
+
+      savedBorderPoints.push({ name, coords, timestamp: new Date().toLocaleString() });
+      localStorage.setItem('sdmw_custom_borders', JSON.stringify(savedBorderPoints));
+      
+      document.getElementById('border-point-name').value = '';
+      document.getElementById('border-point-coords').value = '';
+      renderCustomBorderTable();
+      showToast('✅ Factory border point saved!', 'success');
+    }
+
+    function renderCustomBorderTable() {
+      const tbody = document.getElementById('custom-border-table-body');
+      if (!tbody) return;
+
+      if (savedBorderPoints.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="3" style="text-align:center; color:#94a3b8;">No custom border points saved yet. Use above form to add.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = savedBorderPoints.map((pt, idx) => `
+        <tr>
+          <td><b>${pt.name}</b></td>
+          <td><code>${pt.coords}</code></td>
+          <td><button class="btn btn-danger btn-sm" onclick="deleteBorderPoint(${idx})">Delete</button></td>
+        </tr>
+      `).join('');
+    }
+
+    function deleteBorderPoint(idx) {
+      savedBorderPoints.splice(idx, 1);
+      localStorage.setItem('sdmw_custom_borders', JSON.stringify(savedBorderPoints));
+      renderCustomBorderTable();
+      showToast('🗑️ Border point removed', 'info');
+    }
+
     window.addEventListener('DOMContentLoaded', () => {
       ['wl-date', 'ol-date', 'pay-date', 'tool-date'].forEach(id => {
         const el = document.getElementById(id);
         if(el) el.value = new Date().toISOString().split('T')[0];
       });
+
+      const savedDwell = localStorage.getItem('sdmw_dwell_threshold');
+      if (savedDwell) {
+        dwellThresholdSeconds = parseInt(savedDwell);
+        const inputElem = document.getElementById('adv-dwell-seconds');
+        if (inputElem) inputElem.value = dwellThresholdSeconds;
+      }
+
+      renderCustomBorderTable();
       initFirebase();
+      setTimeout(initLeafletMultiMap, 400);
     });
   </script>
 </body>
