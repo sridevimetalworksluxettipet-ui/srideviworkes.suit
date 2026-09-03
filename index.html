@@ -10,8 +10,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-  <!-- LEAFLET.JS CSS -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+  <!-- MAPPLS WEB SDK CSS -->
+  <link href="https://apis.mappls.com/advancedmaps/api/bnkcnmuylifeaffnbyalpaughcvrbutchjah/map_sdk?layer=vector&v=3.0" rel="stylesheet">
 
   <!-- FIREBASE WEB SDK (v8) -->
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -26,8 +26,8 @@
   <!-- CHART.JS VISUAL ANALYTICS LIBRARY -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-  <!-- LEAFLET.JS JS -->
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+  <!-- MAPPLS WEB SDK JS (Leaflet Hataya Gaya) -->
+  <script src="https://apis.mappls.com/advancedmaps/api/bnkcnmuylifeaffnbyalpaughcvrbutchjah/map_sdk?layer=vector&v=3.0"></script>
 
   <style>
     :root {
@@ -177,8 +177,8 @@
     .alert-flash { animation: flashAlarm 1s infinite alternate; }
     @keyframes flashAlarm { from { background-color: rgba(239, 68, 68, 0.1); border-color: var(--danger); } to { background-color: rgba(239, 68, 68, 0.3); border-color: var(--danger); } }
     
-    /* Interactive Map Box */
-    #leaflet-multi-map { width: 100%; height: 480px; border-radius: var(--radius-md); margin-top: 0.5rem; z-index: 1; }
+    /* Mappls Native Map Box */
+    #mappls-multi-map { width: 100%; height: 480px; border-radius: var(--radius-md); margin-top: 0.5rem; z-index: 1; }
 
     .worker-checkbox-grid {
       display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
@@ -278,7 +278,7 @@
       👷 Worker Master & KYC
       <span class="hi">वर्कर प्रोफाइल व बैंक खाता</span>
     </button>
-    <button class="tab-btn ai-tab" onclick="switchTab('master-gps-center', this); setTimeout(invalidateLeafletMap, 200);" style="color:#0284c7; font-weight:800;">
+    <button class="tab-btn ai-tab" onclick="switchTab('master-gps-center', this); setTimeout(invalidateMapplsMap, 200);" style="color:#0284c7; font-weight:800;">
       🛰️ Multi-Worker Live Map Center
       <span class="hi">मल्टी-वर्कर लाइव मैप व मास्टर सेंटर</span>
     </button>
@@ -509,7 +509,7 @@
       </div>
     </section>
 
-    <!-- 4. MASTER GPS & MULTI-WORKER LEAFLET MAP CENTER -->
+    <!-- 4. MASTER GPS & MULTI-WORKER MAP CENTER (Mappls Native) -->
     <section id="view-master-gps-center" class="view-section">
       <div class="ai-geofence-box" id="geofence-banner">
         <div style="display:flex; align-items:center; gap:0.5rem;">
@@ -525,16 +525,16 @@
         </div>
       </div>
 
-      <!-- MULTI-WORKER LIVE ZOOMABLE MAP WITH INDIVIDUAL PINS -->
+      <!-- Mappls Native Multi-Worker Map Box -->
       <div class="card" style="border: 2px solid var(--primary);">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem; flex-wrap:wrap; gap:0.5rem;">
-          <h3 style="font-size:1.05rem; color:var(--primary);">📍 Multi-Worker Live Map (Surjit, Ganga Singh, Nitish, Pannalal & All)</h3>
+          <h3 style="font-size:1.05rem; color:var(--primary);">📍 Mappls Multi-Worker Live Map Center</h3>
           <span id="live-timer" style="font-size:0.75rem; color:var(--text-secondary); font-weight:700;">Updated: Just now</span>
         </div>
         <p style="font-size:0.82rem; color:var(--text-secondary); margin-bottom:0.75rem;">
-          Yahan sabhi active workers ke alag-alag live pins (Surjit, Ganga Singh, Nitish, Pannalal) unke naam ke sath dikh rahe hain. Aap zoom karke unki exact location dekh sakte hain.
+          Yahan sabhi active workers ke alag-alag live pins Mappls Native Map par dikh rahe hain.
         </p>
-        <div id="leaflet-multi-map"></div>
+        <div id="mappls-multi-map"></div>
       </div>
 
       <!-- ADVANCED GEOFENCE & DWELL TIME RULES -->
@@ -561,7 +561,7 @@
           <span class="badge badge-primary">Manual & GPS Boundary</span>
         </div>
         <p style="color:var(--text-secondary); font-size:0.85rem; margin-bottom:1rem;">
-          Factory ke corners ke coordinates yahan save karein (Live GPS se ya Google Maps से copy karke direct paste karein).
+          Factory ke corners ke coordinates yahan save karein.
         </p>
 
         <div class="form-row">
@@ -1472,15 +1472,15 @@
     let currentModalFinalPhotoBase64 = '';
     let currentGPSLocationStr = 'Luxettipet Workshop (Default)';
 
-    // GPS Telemetry & Leaflet Multi-Worker Map Variables
+    // Mappls Native Map Variables
     let uniqueWorkersMap = new Map();
     let allProcessedLogs = [];
     let allowedRadiusKm = 50;
     let secondsSinceUpdate = 0;
     let previousOutOfBoundsCount = 0;
 
-    let leafletMultiMap = null;
-    let workerMarkersLayer = null;
+    let mapplsMapInstance = null;
+    let workerMarkersList = [];
 
     const SHOP_LAT = 18.9027013;
     const SHOP_LNG = 79.2019361;
@@ -1522,7 +1522,6 @@
         refreshActiveView();
       }, err => console.error(err));
 
-      // Safe JS-side sorting to fetch latest GPS data without index errors
       db.collection('wm_worker_gps_logs').onSnapshot(snapshot => {
         const tbody = document.getElementById('admin-gps-table-body');
         if (!tbody) return;
@@ -1530,7 +1529,7 @@
 
         if (snapshot.empty) {
           tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#94a3b8;">No GPS telemetry records found yet.</td></tr>`;
-          updateLeafletMultiMap([]);
+          updateMapplsNativeMap([]);
           return;
         }
 
@@ -1553,7 +1552,7 @@
 
         allProcessedLogs = Array.from(uniqueWorkersMap.values());
         renderUniqueWorkers();
-        updateLeafletMultiMap(allProcessedLogs);
+        updateMapplsNativeMap(allProcessedLogs);
       }, err => console.error(err));
 
       setInterval(() => {
@@ -1563,65 +1562,58 @@
       }, 1000);
     }
 
-    // Leaflet Multi-Worker Zoomable Map with Mappls Raster Tiles
-    function initLeafletMultiMap() {
-      if (leafletMultiMap) return;
-
-      leafletMultiMap = L.map('leaflet-multi-map', { maxZoom: 22 }).setView([SHOP_LAT, SHOP_LNG], 17);
-
-      // Mappls Raster Tile Layer integrated with Static Key
-      L.tileLayer('https://apis.mappls.com/advancedmaps/v1/43cf0bfb15b3c54d5d9c8aa0e77d3f11/retina_map/{z}/{x}/{y}.png', {
-        maxZoom: 22,
-        minZoom: 4,
-        attribution: '&copy; MapmyIndia Mappls'
-      }).addTo(leafletMultiMap);
-
-      workerMarkersLayer = L.layerGroup().addTo(leafletMultiMap);
-
-      L.marker([SHOP_LAT, SHOP_LNG], {
-        icon: L.divIcon({
-          className: 'custom-shop-pin',
-          html: '<div style="background:#4f46e5; color:white; padding:4px 8px; border-radius:6px; font-weight:800; font-size:11px; white-space:nowrap; box-shadow:0 4px 10px rgba(0,0,0,0.5);">🏭 Sri Devi Metal Works</div>',
-          iconSize: [120, 30],
-          iconAnchor: [60, 15]
-        })
-      }).addTo(leafletMultiMap);
-
-      if (allProcessedLogs.length > 0) {
-        updateLeafletMultiMap(allProcessedLogs);
+    // Mappls Native Map Initialization (Leaflet Completely Removed)
+    function initMapplsNativeMap() {
+      if (mapplsMapInstance) return;
+      if (typeof mappls === 'undefined') {
+        setTimeout(initMapplsNativeMap, 500);
+        return;
       }
+
+      mapplsMapInstance = new mappls.Map('mappls-multi-map', {
+        center: [SHOP_LAT, SHOP_LNG],
+        zoom: 16,
+        traffic: true
+      });
+
+      mapplsMapInstance.on('load', () => {
+        // Add Workshop Shop Pin
+        new mappls.Marker({
+          map: mapplsMapInstance,
+          position: { lat: SHOP_LAT, lng: SHOP_LNG },
+          popupHtml: '<div style="font-weight:800; font-size:12px;">🏭 Sri Devi Metal Works</div>'
+        });
+
+        if (allProcessedLogs.length > 0) {
+          updateMapplsNativeMap(allProcessedLogs);
+        }
+      });
     }
 
-    function invalidateLeafletMap() {
+    function invalidateMapplsMap() {
       setTimeout(() => {
-        if (!leafletMultiMap) {
-          initLeafletMultiMap();
+        if (!mapplsMapInstance) {
+          initMapplsNativeMap();
         } else {
-          leafletMultiMap.invalidateSize();
+          mapplsMapInstance.resize();
         }
       }, 200);
     }
 
-    function updateLeafletMultiMap(logs) {
-      if (!leafletMultiMap || !workerMarkersLayer) return;
-      workerMarkersLayer.clearLayers();
+    function updateMapplsNativeMap(logs) {
+      if (!mapplsMapInstance || typeof mappls === 'undefined') return;
+
+      // Clear existing worker markers
+      workerMarkersList.forEach(m => m.remove());
+      workerMarkersList = [];
 
       logs.forEach(log => {
-        const lat = log.latitude;
-        const lng = log.longitude;
-        const wName = log.workerName || 'Active Worker';
-        const timeStr = new Date(log.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
-        const workerIcon = L.divIcon({
-          className: 'custom-worker-pin',
-          html: `<div style="background:#ef4444; color:white; padding:4px 8px; border-radius:6px; font-weight:800; font-size:11px; white-space:nowrap; box-shadow:0 4px 12px rgba(239,68,68,0.7); border:2px solid white;">👤 ${wName} (${timeStr})</div>`,
-          iconSize: [140, 30],
-          iconAnchor: [70, 15]
+        const marker = new mappls.Marker({
+          map: mapplsMapInstance,
+          position: { lat: log.latitude, lng: log.longitude },
+          popupHtml: `<b>Worker:</b> ${log.workerName || 'Active'}<br><b>Time:</b> ${new Date(log.timestamp).toLocaleTimeString()}<br><b>Battery:</b> ${log.battery || 'N/A'}`
         });
-
-        const marker = L.marker([lat, lng], { icon: workerIcon });
-        marker.bindPopup(`<b>Worker:</b> ${wName}<br><b>Time:</b> ${new Date(log.timestamp).toLocaleString()}<br><b>Battery:</b> ${log.battery || 'N/A'}`);
-        workerMarkersLayer.addLayer(marker);
+        workerMarkersList.push(marker);
       });
     }
 
@@ -1633,7 +1625,7 @@
       btn.classList.add('active');
       refreshActiveView();
       if (tabId === 'master-gps-center') {
-        invalidateLeafletMap();
+        invalidateMapplsMap();
       }
     }
 
@@ -3075,7 +3067,7 @@
 
       renderCustomBorderTable();
       initFirebase();
-      setTimeout(initLeafletMultiMap, 400);
+      setTimeout(initMapplsNativeMap, 400);
     });
   </script>
 </body>
