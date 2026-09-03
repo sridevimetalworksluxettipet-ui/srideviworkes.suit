@@ -500,7 +500,6 @@
                 <th>Trade <span class="hi-th">काम का प्रकार</span></th>
                 <th>Bank & Account <span class="hi-th">बैंक व खाता नंबर</span></th>
                 <th>ID Details <span class="hi-th">पहचान व पैन</span></th>
-                <th>Disputes / Issues <span class="hi-th">शिकायतें / डिस्प्यूट</span></th>
                 <th>Action <span class="hi-th">एक्शन</span></th>
               </tr>
             </thead>
@@ -1463,7 +1462,7 @@
     };
 
     let db = null;
-    let workersList = [], workLogsList = [], paymentsList = [], toolIssueList = [], disputesList = [];
+    let workersList = [], workLogsList = [], paymentsList = [], toolIssueList = [];
     let wageVsAdvChartInstance = null;
     let tradeDistChartInstance = null;
 
@@ -1508,47 +1507,13 @@
         refreshActiveView();
       }, err => console.error(err));
 
-      let isInitialWorkLoadDone = false;
       db.collection('wm_work_logs').onSnapshot(snap => {
-        snap.docChanges().forEach(change => {
-          if (change.type === "added" && isInitialWorkLoadDone) {
-            const log = change.doc.data();
-            showToast(`⚙️ Naya Kaam Add Hua: ${log.workerName || 'Worker'} - ${log.task} (${log.qty || 0} Pcs)`, 'info');
-            playBeepSound();
-            triggerPushNotification("⚙️ New Work Entry", `${log.workerName || 'Worker'} added: ${log.task}`);
-          }
-        });
         workLogsList = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         refreshActiveView();
-        setTimeout(() => { isInitialWorkLoadDone = true; }, 1500);
       }, err => console.error(err));
 
-      let isInitialPayLoadDone = false;
       db.collection('wm_payments').onSnapshot(snap => {
-        snap.docChanges().forEach(change => {
-          if (change.type === "added" && isInitialPayLoadDone) {
-            const pay = change.doc.data();
-            showToast(`💵 Naya Payment/Advance: ${pay.workerName || 'Worker'} - ₹${pay.amount} (${pay.type})`, 'success');
-            playBeepSound();
-            triggerPushNotification("💵 Payment Updated", `${pay.workerName || 'Worker'} recorded ${pay.type} of ₹${pay.amount}`);
-          }
-        });
         paymentsList = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        refreshActiveView();
-        setTimeout(() => { isInitialPayLoadDone = true; }, 1500);
-      }, err => console.error(err));
-
-      // Real-time listener for worker disputes
-      db.collection('wm_disputes').onSnapshot(snapshot => {
-        disputesList = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        snapshot.docChanges().forEach(change => {
-          if (change.type === "added") {
-            const dispute = change.doc.data();
-            showToast(`⚠️ Naya Dispute: ${dispute.workerName || 'Worker'} ne discrepancy report ki hai!`, 'danger');
-            playBeepSound();
-            triggerPushNotification("⚠️ Worker Dispute Alert", `${dispute.workerName || 'Worker'}: ${dispute.message || 'Check portal'}`);
-          }
-        });
         refreshActiveView();
       }, err => console.error(err));
 
@@ -1598,15 +1563,17 @@
       }, 1000);
     }
 
-    // Leaflet Multi-Worker Zoomable Map (OpenStreetMap Standard Tiles)
+    // Leaflet Multi-Worker Zoomable Map with Mappls Raster Tiles
     function initLeafletMultiMap() {
       if (leafletMultiMap) return;
 
       leafletMultiMap = L.map('leaflet-multi-map', { maxZoom: 22 }).setView([SHOP_LAT, SHOP_LNG], 17);
 
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      // Mappls Raster Tile Layer integrated with Static Key
+      L.tileLayer('https://apis.mappls.com/advancedmaps/v1/43cf0bfb15b3c54d5d9c8aa0e77d3f11/retina_map/{z}/{x}/{y}.png', {
         maxZoom: 22,
-        attribution: '&copy; OpenStreetMap contributors'
+        minZoom: 4,
+        attribution: '&copy; MapmyIndia Mappls'
       }).addTo(leafletMultiMap);
 
       workerMarkersLayer = L.layerGroup().addTo(leafletMultiMap);
@@ -2218,7 +2185,7 @@
       if (!respBox) return;
 
       if (!q) {
-        respBox.innerHTML = "⚠️ Kripya koi sawal type karein ya quick chip par click karein.";
+        respBox.innerHTML = "⚠️ Kripya koi sawal type karein या quick chip पर click karein.";
         return;
       }
 
@@ -2328,13 +2295,6 @@
         const bankInfo = w.accountNo ? `<b>${w.bankName || 'Bank'}</b><br>A/C: ${w.accountNo}<br>IFSC: ${w.ifsc || '-'}` : '<span style="color:var(--text-muted)">No Bank Info</span>';
         const kycInfo = (w.aadhaar || w.pan) ? `ID: ${w.aadhaar || '-'}<br>PAN: ${w.pan || '-'}` : '<span style="color:var(--text-muted)">No ID</span>';
 
-        // Filter disputes matching this worker
-        const workerDisputes = disputesList.filter(d => String(d.workerName || '').trim().toLowerCase() === String(w.name || '').trim().toLowerCase());
-        let disputeHtml = '<span style="color:var(--text-muted); font-size:0.75rem;">No Issues</span>';
-        if (workerDisputes.length > 0) {
-          disputeHtml = workerDisputes.map(d => `<div style="background:var(--danger-light); color:var(--danger); padding:0.2rem 0.4rem; border-radius:6px; margin-bottom:3px; font-size:0.75rem;">⚠️ ${d.message} <br><small>(${d.date})</small></div>`).join('');
-        }
-
         tbody.innerHTML += `
           <tr>
             <td><b>${w.name}</b> ${w.nameHi ? '<br><span class="hi-text">(' + w.nameHi + ')</span>' : ''}</td>
@@ -2342,7 +2302,6 @@
             <td><span class="badge badge-success">${w.trade || 'General'}</span></td>
             <td style="font-size:0.85rem;">${bankInfo}</td>
             <td style="font-size:0.85rem;">${kycInfo}</td>
-            <td style="font-size:0.85rem; max-width:200px;">${disputeHtml}</td>
             <td>
               <div style="display:flex; gap:0.3rem;">
                 <button class="btn btn-outline btn-sm" onclick="openWorkerIDCard('${w.id}')">🪪 ID</button>
